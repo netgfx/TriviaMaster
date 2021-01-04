@@ -1,0 +1,88 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Alamofire",
+        "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
+        "state": {
+          "branch": null,
+          "revision": "eaf6e622dd41b07b251d8f01752eab31bc811493",
+          "version": "5.4.1"
+        }
+      },
+      {
+        "package": "Macaw",
+        "repositoryURL": "https://github.com/exyte/Macaw.git",
+        "state": {
+          "branch": "master",
+          "revision": "2b406e55f21d2122a6cea081bc57db413c010427",
+          "version": null
+        }
+      },
+      {
+        "package": "Repeat",
+        "repositoryURL": "https://github.com/malcommac/Repeat.git",
+        "state": {
+          "branch": null,
+          "revision": "9df757d0936c15dfd9d01067766fab87e927f838",
+          "version": "0.6.0"
+        }
+      },
+      {
+        "package": "SDWebImage",
+        "repositoryURL": "https://github.com/SDWebImage/SDWebImage.git",
+        "state": {
+          "branch": null,
+          "revision": "e857b78ca4c8afe616b794aeb090d40f4e348072",
+          "version": "5.10.0"
+        }
+      },
+      {
+        "package": "SDWebImageSVGCoder",
+        "repositoryURL": "https://github.com/SDWebImage/SDWebImageSVGCoder.git",
+        "state": {
+          "branch": null,
+          "revision": "0fefd2b89c64fb5ebbce2294dcb67581ed0fc0ff",
+          "version": "1.6.0"
+        }
+      },
+      {
+        "package": "SDWebImageSwiftUI",
+        "repositoryURL": "https://github.com/SDWebImage/SDWebImageSwiftUI.git",
+        "state": {
+          "branch": null,
+          "revision": "4c7f169e39bc35d6b80d42b8eb8301bee9cd0907",
+          "version": "1.5.0"
+        }
+      },
+      {
+        "package": "SwiftFortuneWheel",
+        "repositoryURL": "https://github.com/sh-khashimov/SwiftFortuneWheel.git",
+        "state": {
+          "branch": null,
+          "revision": "7410a3e96d0ecb77740f3478d42f9057e1965089",
+          "version": "1.3.1"
+        }
+      },
+      {
+        "package": "NavigationStack",
+        "repositoryURL": "https://github.com/matteopuc/swiftui-navigation-stack.git",
+        "state": {
+          "branch": null,
+          "revision": "7b1dd956e4eed27780311520b31f6831ec87a820",
+          "version": "0.1.0"
+        }
+      },
+      {
+        "package": "SWXMLHash",
+        "repositoryURL": "https://github.com/drmohundro/SWXMLHash",
+        "state": {
+          "branch": null,
+          "revision": "a4931e5c3bafbedeb1601d3bb76bbe835c6d475a",
+          "version": "5.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

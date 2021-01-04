@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "008-video.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

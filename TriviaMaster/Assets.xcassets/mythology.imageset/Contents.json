@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "007-zeus.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
