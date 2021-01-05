@@ -23,7 +23,7 @@ struct MenuView: View {
             VStack{
                 Text("Select a Mode to Play").font(.custom("KGBlankSpaceSolid", size: 28)).foregroundColor(.white)
                 
-                VStack(spacing: 20){
+                VStack(spacing: 40){
                     Spacer()
                     HStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 50, content: {
                         VStack(spacing:10){
@@ -40,6 +40,17 @@ struct MenuView: View {
                             Text("Challenge Wheel").font(.custom("KGBlankSpaceSolid", size: 24)).multilineTextAlignment(.center).foregroundColor(.white)
                         }
                     })
+                    
+                    HStack{
+                        Spacer()
+                        VStack(alignment: .center){
+                           PushView(destination: GroupChallengeView(activeView: $activeView)) {
+                                Image("group-challenge").resizable().frame(width: 64, height: 64, alignment: .center)
+                            }
+                            Text("Group Challenge").font(.custom("KGBlankSpaceSolid", size: 24)).multilineTextAlignment(.center).foregroundColor(.white)
+                        }
+                        Spacer()
+                    }
                     
                     Spacer()
                 }
