@@ -31,6 +31,7 @@ struct MenuView: View {
                                 Image("categories").resizable().frame(width: 64, height: 64, alignment: .center)
                             }
                             Text("Categories").font(.custom("KGBlankSpaceSolid", size: 24)).foregroundColor(.white)
+                            
                         }
                         
                         VStack(alignment: .center){
