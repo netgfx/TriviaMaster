@@ -9,16 +9,70 @@ import Foundation
 import SwiftUI
 import Combine
 
+enum TeamTurn:String {
+    case WHITE = "white"
+    case BLACK = "black"
+}
+
+class MazeHelper: ObservableObject {
+    static let shared = MazeHelper()
+    @Published var scaledTiles: Array<MazeLocation> = []
+    @Published var whiteTeamCurrentLocation:MazeLocation = MazeLocation(row: 0, col: 0)
+    @Published var blackTeamCurrentLocation:MazeLocation = MazeLocation(row: 0, col: 0)
+    @Published var teamTurn:TeamTurn = .WHITE
+    
+    var blocks = GroupChallenge()
+    
+    func calculateTiles(wheelResult:Int) {
+        // calculate which tiles to scale based on current position and wheel result
+        // TODO Add towards all routes
+        print(wheelResult, whiteTeamCurrentLocation, blackTeamCurrentLocation)
+        
+        // row based
+        let teamCoords = self.teamTurn == .WHITE ? whiteTeamCurrentLocation : blackTeamCurrentLocation
+        
+        let rowPoint = MazeLocation(row: teamCoords.row, col: teamCoords.col+wheelResult)
+        let row:Cell = blocks.getVectorTypeBy(point: rowPoint)
+        
+        let colPoint = MazeLocation(row: teamCoords.row+wheelResult, col: teamCoords.col)
+        let col:Cell = blocks.getVectorTypeBy(point: colPoint)
+        
+       
+        
+        self.scaledTiles.removeAll()
+        
+        print("Checking... \(row), \(col), \(both)", rowPoint, colPoint, bothPoint)
+        if row != Cell.Blocked && row != Cell.NotFound{
+            self.scaledTiles.append(rowPoint)
+        }
+        
+        if col != Cell.Blocked && col != Cell.NotFound {
+            self.scaledTiles.append(colPoint)
+        }
+        
+        
+        
+        print(scaledTiles)
+        
+    }
+    
+    private init(){}
+}
 
 struct GroupChallengeView:View {
     
     @EnvironmentObject var navigationHelper: NavigationHelper
     @Binding var activeView: PushedItem?
-    @State var teamTurn:String = "white"
-    @State var scaledTiles:Array<MazeLocation> = [MazeLocation(row: 0, col: 1), MazeLocation(row: 1, col: 0)]
+    
+    @ObservedObject var mazeHelper:MazeHelper = MazeHelper.shared
+    @State var scaledTiles:Array<MazeLocation> = MazeHelper.shared.scaledTiles
     @State var whiteTeamKeys:Int = 0
     @State var blackTeamKeys:Int = 0
+    //@State var whiteTeamCurrentPos:MazeLocation = MazeLocation(row: 0, col: 0)
+    //@State var blackTeamCurrentPos:MazeLocation = MazeLocation(row: 0, col: 0)
     var blocks = GroupChallenge()
+//    @State var slicePicked:Bool = false
+//    @State var sliceIndexPicked:Int = 0
     
     // pre-configure the board ;)
     var localMap:Array<Array<Dictionary<String, Any>>> = {
@@ -72,17 +126,32 @@ struct GroupChallengeView:View {
     func onTileTapped(index:Int, innerIndex:Int) {
         print(index, innerIndex)
         self.removeMazeLocation(index: index, innerIndex: innerIndex)
+        // add persistence
+        if self.mazeHelper.teamTurn == .WHITE {
+            self.mazeHelper.whiteTeamCurrentLocation = MazeLocation(row: index, col: innerIndex)
+            setTeamTurn(team: .BLACK)
+        }
+        else {
+            self.mazeHelper.blackTeamCurrentLocation = MazeLocation(row: index, col: innerIndex)
+            setTeamTurn(team: .WHITE)
+        }
+        
+    }
+    
+    func setTeamTurn(team:TeamTurn) {
+        self.mazeHelper.teamTurn = team
     }
     
     func getTeamTurn() -> String {
-        return self.teamTurn.uppercased()
+        return self.mazeHelper.teamTurn.rawValue.uppercased()
     }
     
     func setScale(index:Int, innerIndex:Int) -> CGFloat {
         var result:CGFloat = 1.0
         
         // add logic to scale some tiles
-        for item in self.scaledTiles {
+        print(self.mazeHelper.scaledTiles)
+        for item in self.mazeHelper.scaledTiles {
             if item.row == index && item.col == innerIndex {
                 result = 1.2
             }
@@ -95,7 +164,7 @@ struct GroupChallengeView:View {
         var result:Double = 1.0
         
         // add logic to scale some tiles
-        for item in self.scaledTiles {
+        for item in self.mazeHelper.scaledTiles {
             if item.row == index && item.col == innerIndex {
                 result = Double.random(in: 90..<99)
             }
@@ -108,9 +177,9 @@ struct GroupChallengeView:View {
         var result:Double = 1.0
         
         // add logic to scale some tiles
-        for item in self.scaledTiles {
+        for item in self.mazeHelper.scaledTiles {
             if item.row == index {
-                result = Double.random(in: 90..<99)*Double(index)
+                result = Double.random(in: 90..<99)*Double(index+1)
             }
         }
         
@@ -119,16 +188,18 @@ struct GroupChallengeView:View {
     
     func removeMazeLocation(index:Int, innerIndex: Int) {
         var counter:Int = 0
-        for item in self.scaledTiles {
-            if item.row == index {
-                self.scaledTiles.remove(at: counter)
-            }
-            counter += 1
-        }
+        // should probably remove them all
+        self.mazeHelper.scaledTiles.removeAll()
+//        for item in self.mazeHelper.scaledTiles {
+//            if item.row == index {
+//                self.mazeHelper.scaledTiles.remove(at: counter)
+//            }
+//            counter += 1
+//        }
     }
     
     func getTeamColor() -> Color {
-        if self.teamTurn == "white" {
+        if self.mazeHelper.teamTurn == .WHITE {
             return .white
         }
         else {
@@ -136,11 +207,11 @@ struct GroupChallengeView:View {
         }
     }
     
-    func getShadow(index:Int, innerIndex:Int) -> CGFloat {
+    func getShadow(index:Int, innerIndex:Int, scaledTiles:Array<MazeLocation>) -> CGFloat {
         var result:CGFloat = 0.0
         
         // add logic to scale some tiles
-        for item in self.scaledTiles {
+        for item in scaledTiles {
             if item.row == index && item.col == innerIndex {
                 result = 5.0
             }
@@ -165,6 +236,9 @@ struct GroupChallengeView:View {
                         
                         ForEach(0..<8, id: \.self) { index in
                             HStack(spacing:0){
+                                if  self.mazeHelper.scaledTiles.count > 0 {
+                                    EmptyView()
+                                }
                                 // layout the board 8x8
                                 ForEach(0..<8, id: \.self) { innerIndex in
                                     if localMap[index][innerIndex]["type"] as! Int == 1 {
@@ -174,7 +248,7 @@ struct GroupChallengeView:View {
                                         }
                                         .zIndex(self.setZIndex(index:index, innerIndex:innerIndex))
                                         .scaleEffect(self.setScale(index: index, innerIndex: innerIndex), anchor: .center)
-                                        .shadow(color: .black, radius: self.getShadow(index:index, innerIndex: innerIndex))
+                                        .shadow(color: .black, radius: self.getShadow(index:index, innerIndex: innerIndex, scaledTiles: self.mazeHelper.scaledTiles))
                                         .onTapGesture {
                                             self.onTileTapped(index: index, innerIndex: innerIndex)
                                         }
@@ -186,7 +260,7 @@ struct GroupChallengeView:View {
                                         }
                                         .zIndex(self.setZIndex(index:index, innerIndex:innerIndex))
                                         .scaleEffect(self.setScale(index: index, innerIndex: innerIndex), anchor: .center)
-                                        .shadow(color: .black, radius: self.getShadow(index:index, innerIndex: innerIndex))
+                                        .shadow(color: .black, radius: self.getShadow(index:index, innerIndex: innerIndex, scaledTiles: self.mazeHelper.scaledTiles))
                                         .onTapGesture {
                                             self.onTileTapped(index: index, innerIndex: innerIndex)
                                         }
@@ -198,7 +272,7 @@ struct GroupChallengeView:View {
                                         }
                                         .zIndex(self.setZIndex(index:index, innerIndex:innerIndex))
                                         .scaleEffect(self.setScale(index: index, innerIndex: innerIndex), anchor: .center)
-                                        .shadow(color: .black, radius: self.getShadow(index:index, innerIndex: innerIndex))
+                                        .shadow(color: .black, radius: self.getShadow(index:index, innerIndex: innerIndex, scaledTiles: self.mazeHelper.scaledTiles))
                                         .onTapGesture {
                                             self.onTileTapped(index: index, innerIndex: innerIndex)
                                         }
@@ -211,26 +285,29 @@ struct GroupChallengeView:View {
                                 }
                             }.zIndex(setZRowIndex(index:index))
                         }
+                        
+                        VStack(spacing:20) {
+                            // other controls //
+                            DiceWheelMainView()
+                            
+                            HStack {
+                                Spacer()
+                                HStack(spacing:10){
+                                    CustomText(text: "W", size: 51, color: .white)
+                                    CustomText(text: String(self.whiteTeamKeys)+"/3", size: 24, color:.white)
+                                }
+                                Spacer()
+                                HStack(spacing:10){
+                                    CustomText(text: "B", size: 51, color: .black)
+                                    CustomText(text: String(self.blackTeamKeys)+"/3", size: 24, color:.black)
+                                }
+                                Spacer()
+                            }
+                        }.padding(.top, 20)
                     }.padding(10).edgesIgnoringSafeArea(.all)
+                    
+                    
                 }.ignoresSafeArea().edgesIgnoringSafeArea(.all)
-                
-                // other controls //
-                
-                HStack {
-                    Spacer()
-                    HStack(spacing:10){
-                        CustomText(text: "W", size: 51, color: .white)
-                        CustomText(text: String(self.whiteTeamKeys)+"/3", size: 24, color:.white)
-                    }
-                    Spacer()
-                    HStack(spacing:10){
-                        CustomText(text: "B", size: 51, color: .black)
-                        CustomText(text: String(self.blackTeamKeys)+"/3", size: 24, color:.black)
-                    }
-                    Spacer()
-                }
-                
-                Spacer()
             }
         }.onAppear(perform: calculateMaze)
     }

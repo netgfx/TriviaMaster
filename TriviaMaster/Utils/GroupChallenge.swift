@@ -24,8 +24,37 @@ class GroupChallenge:ObservableObject {
         5, 1, 1, 1, 1, 1, 5, 2
     ]
     
+    var map2D = [
+        [1, 1, 1, 5, 1, 1, 1, 5],
+        [1, 0, 0, 0, 1, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 1],
+        [5, 0, 0, 0, 1, 0, 0, 1],
+        [1, 0, 0, 0, 1, 1, 1, 5],
+        [1, 1, 1, 1, 5, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 5],
+        [5, 1, 1, 1, 1, 1, 5, 2]
+    ]
+    
     func getMap() -> Array<Int> {
         return self.map
+    }
+    
+    func getVectorTypeBy(point:MazeLocation) -> Cell {
+        if map2D[point.row][point.col] == 0 {
+            return Cell.Blocked
+        }
+        else if map2D[point.row][point.col] == 1 {
+            return Cell.Empty
+        }
+        else if map2D[point.row][point.col] == 2 {
+            return Cell.Goal
+        }
+        else if map2D[point.row][point.col] == 5 {
+            return Cell.Key
+        }
+        else {
+            return Cell.NotFound
+        }
     }
     
     func getMaze() -> Maze {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4204D14725AC90C900FDA9FB /* DiceWheelMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4204D14625AC90C900FDA9FB /* DiceWheelMainView.swift */; };
 		42338442258E2C53001D97A9 /* WheelConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42338441258E2C53001D97A9 /* WheelConfig.swift */; };
 		42338445258E2FA4001D97A9 /* Wheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42338444258E2FA4001D97A9 /* Wheel.swift */; };
 		42338448258E30C0001D97A9 /* WheelUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42338447258E30C0001D97A9 /* WheelUI.swift */; };
@@ -34,6 +35,8 @@
 		42BC22D0258E22D6007B5456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42BC22CF258E22D6007B5456 /* Assets.xcassets */; };
 		42BC22D3258E22D6007B5456 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42BC22D2258E22D6007B5456 /* Preview Assets.xcassets */; };
 		42BC22DD258E239E007B5456 /* SwiftFortuneWheel in Frameworks */ = {isa = PBXBuildFile; productRef = 42BC22DC258E239E007B5456 /* SwiftFortuneWheel */; };
+		42CBDEC725AADEE100BAC8E8 /* DiceWheelConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CBDEC625AADEE100BAC8E8 /* DiceWheelConfig.swift */; };
+		42CBDECB25AAE04C00BAC8E8 /* DiceWheelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CBDECA25AAE04C00BAC8E8 /* DiceWheelView.swift */; };
 		42DD8E0E2592052B001ACFC3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DD8E0D2592052B001ACFC3 /* AppDelegate.swift */; };
 		42DD8E12259222C2001ACFC3 /* Macaw in Frameworks */ = {isa = PBXBuildFile; productRef = 42DD8E11259222C2001ACFC3 /* Macaw */; };
 		42DD8E15259222E0001ACFC3 /* SVGView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DD8E14259222E0001ACFC3 /* SVGView.swift */; };
@@ -59,6 +62,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4204D14625AC90C900FDA9FB /* DiceWheelMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceWheelMainView.swift; sourceTree = "<group>"; };
 		42338441258E2C53001D97A9 /* WheelConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelConfig.swift; sourceTree = "<group>"; };
 		42338444258E2FA4001D97A9 /* Wheel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wheel.swift; sourceTree = "<group>"; };
 		42338447258E30C0001D97A9 /* WheelUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelUI.swift; sourceTree = "<group>"; };
@@ -84,6 +88,8 @@
 		42BC22CF258E22D6007B5456 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		42BC22D2258E22D6007B5456 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		42BC22D4258E22D6007B5456 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		42CBDEC625AADEE100BAC8E8 /* DiceWheelConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceWheelConfig.swift; sourceTree = "<group>"; };
+		42CBDECA25AAE04C00BAC8E8 /* DiceWheelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceWheelView.swift; sourceTree = "<group>"; };
 		42DD8E0D2592052B001ACFC3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		42DD8E14259222E0001ACFC3 /* SVGView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVGView.swift; sourceTree = "<group>"; };
 		42DD8E1825935460001ACFC3 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
@@ -174,6 +180,7 @@
 				42DD8E36259B0E17001ACFC3 /* Stats.swift */,
 				42DD8E39259B0E27001ACFC3 /* Settings.swift */,
 				42DD8E3C259B0E3C001ACFC3 /* Help.swift */,
+				42CBDEC525AADEB400BAC8E8 /* Dice Wheel */,
 				42338440258E2C36001D97A9 /* Wheel */,
 				42BC22CF258E22D6007B5456 /* Assets.xcassets */,
 				42BC22D4258E22D6007B5456 /* Info.plist */,
@@ -190,6 +197,7 @@
 				42952D08259E4FAE00A0B030 /* ResultView.swift */,
 				42DD8E47259B3B8D001ACFC3 /* WheelMainView.swift */,
 				42952D1525A4B39E00A0B030 /* GroupChallengeView.swift */,
+				4204D14625AC90C900FDA9FB /* DiceWheelMainView.swift */,
 			);
 			path = TriviaMaster;
 			sourceTree = "<group>";
@@ -200,6 +208,15 @@
 				42BC22D2258E22D6007B5456 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		42CBDEC525AADEB400BAC8E8 /* Dice Wheel */ = {
+			isa = PBXGroup;
+			children = (
+				42CBDEC625AADEE100BAC8E8 /* DiceWheelConfig.swift */,
+				42CBDECA25AAE04C00BAC8E8 /* DiceWheelView.swift */,
+			);
+			path = "Dice Wheel";
 			sourceTree = "<group>";
 		};
 		42DD8E1725935005001ACFC3 /* Components */ = {
@@ -329,6 +346,7 @@
 				42BC22CE258E22D5007B5456 /* ContentView.swift in Sources */,
 				42DD8E40259B1375001ACFC3 /* BottomBar.swift in Sources */,
 				42952D1325A4AF7300A0B030 /* GroupChallenge.swift in Sources */,
+				4204D14725AC90C900FDA9FB /* DiceWheelMainView.swift in Sources */,
 				42DD8E4C259B6A85001ACFC3 /* Utils.swift in Sources */,
 				42DD8E37259B0E17001ACFC3 /* Stats.swift in Sources */,
 				4233844B258E3873001D97A9 /* Extensions.swift in Sources */,
@@ -341,6 +359,7 @@
 				42952D1625A4B39E00A0B030 /* GroupChallengeView.swift in Sources */,
 				42DD8E0E2592052B001ACFC3 /* AppDelegate.swift in Sources */,
 				42BC22CC258E22D5007B5456 /* TriviaMasterApp.swift in Sources */,
+				42CBDEC725AADEE100BAC8E8 /* DiceWheelConfig.swift in Sources */,
 				42DD8E62259C9FB8001ACFC3 /* BackArrowWithoutTimer.swift in Sources */,
 				42DD8E15259222E0001ACFC3 /* SVGView.swift in Sources */,
 				42DD8E3A259B0E27001ACFC3 /* Settings.swift in Sources */,
@@ -364,6 +383,7 @@
 				42DD8E312599CF25001ACFC3 /* Categories.swift in Sources */,
 				423384802590D733001D97A9 /* EditorConfig.swift in Sources */,
 				423384792590D325001D97A9 /* User.swift in Sources */,
+				42CBDECB25AAE04C00BAC8E8 /* DiceWheelView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

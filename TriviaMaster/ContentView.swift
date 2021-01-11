@@ -50,7 +50,7 @@ struct ContentView: View {
     func checkRegistration() {
         selectedPushedItem = User.shared.getName() == "" ? PushedItem.REGISTER : PushedItem.MENU
         
-        print(self.navigationHelper.selection)
+        //print(self.navigationHelper.selection)
     }
     
     var body: some View {

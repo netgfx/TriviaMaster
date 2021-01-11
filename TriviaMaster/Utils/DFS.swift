@@ -59,7 +59,7 @@ enum Cell: Int {
     case Blocked = 0
     case Key = 5
     case Goal = 2
-    case Path = -1
+    case NotFound = -1
 }
 
 typealias Maze = [[Cell]]
