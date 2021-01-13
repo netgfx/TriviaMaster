@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4204D14725AC90C900FDA9FB /* DiceWheelMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4204D14625AC90C900FDA9FB /* DiceWheelMainView.swift */; };
+		4204D16A25AF79F600FDA9FB /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4204D16925AF79F600FDA9FB /* ProfileImage.swift */; };
 		42338442258E2C53001D97A9 /* WheelConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42338441258E2C53001D97A9 /* WheelConfig.swift */; };
 		42338445258E2FA4001D97A9 /* Wheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42338444258E2FA4001D97A9 /* Wheel.swift */; };
 		42338448258E30C0001D97A9 /* WheelUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42338447258E30C0001D97A9 /* WheelUI.swift */; };
@@ -63,6 +64,7 @@
 
 /* Begin PBXFileReference section */
 		4204D14625AC90C900FDA9FB /* DiceWheelMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceWheelMainView.swift; sourceTree = "<group>"; };
+		4204D16925AF79F600FDA9FB /* ProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImage.swift; sourceTree = "<group>"; };
 		42338441258E2C53001D97A9 /* WheelConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelConfig.swift; sourceTree = "<group>"; };
 		42338444258E2FA4001D97A9 /* Wheel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wheel.swift; sourceTree = "<group>"; };
 		42338447258E30C0001D97A9 /* WheelUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelUI.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				42DD8E3F259B1375001ACFC3 /* BottomBar.swift */,
 				42952D0B25A0641500A0B030 /* CustomText.swift */,
 				42952D0E25A064DD00A0B030 /* StatsBox.swift */,
+				4204D16925AF79F600FDA9FB /* ProfileImage.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 				42DD8E222593BE35001ACFC3 /* BackArrow.swift in Sources */,
 				42DD8E5B259C5E81001ACFC3 /* Login.swift in Sources */,
 				4233848725910ED3001D97A9 /* Webview.swift in Sources */,
+				4204D16A25AF79F600FDA9FB /* ProfileImage.swift in Sources */,
 				42DD8E282599C039001ACFC3 /* Question.swift in Sources */,
 				42DD8E1C259364B6001ACFC3 /* CategoryBox.swift in Sources */,
 				42DD8E1925935460001ACFC3 /* UserProfile.swift in Sources */,

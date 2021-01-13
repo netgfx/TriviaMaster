@@ -7,6 +7,38 @@
 
 import Foundation
 
+struct MoodFields {
+    var values = [
+        "happy",
+        "sad",
+        "surprised"
+    ]
+    
+    func getValues() -> [String] {
+        return values
+    }
+}
+
+struct GenderFields {
+    var values = [
+        "male",
+        "female",
+        "human",
+        "identicon",
+        "initials",
+        "bottts",
+        "avataaars",
+        "jdenticon",
+        "gridy"
+    ]
+    
+    func getValues() -> [String] {
+        return values
+    }
+}
+
+
+
 struct TopFields {
     var values = [
         "NoHair",

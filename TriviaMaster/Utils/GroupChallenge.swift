@@ -40,6 +40,15 @@ class GroupChallenge:ObservableObject {
     }
     
     func getVectorTypeBy(point:MazeLocation) -> Cell {
+        
+        if point.row < 0 {
+            return Cell.NotFound
+        }
+        
+        if point.col < 0 {
+            return Cell.NotFound
+        }
+        
         if map2D[point.row][point.col] == 0 {
             return Cell.Blocked
         }

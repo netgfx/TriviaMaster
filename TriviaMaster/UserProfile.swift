@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import NavigationStack
 
 struct UserProfile:View {
     
@@ -37,7 +38,7 @@ struct UserProfile:View {
                     //ScrollView(.vertical){
                     VStack(spacing: 20){
                         VStack {
-                            NavigationLink(destination: ProfileEditor(activeView: $activeView)){
+                            PushView(destination: ProfileEditor(activeView: $activeView)) {
                                 Image("user").resizable()
                                     .clipShape(Circle())
                                     .shadow(radius: 10)

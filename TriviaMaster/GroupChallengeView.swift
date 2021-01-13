@@ -37,11 +37,16 @@ class MazeHelper: ObservableObject {
         let colPoint = MazeLocation(row: teamCoords.row+wheelResult, col: teamCoords.col)
         let col:Cell = blocks.getVectorTypeBy(point: colPoint)
         
+        let leftPoint:MazeLocation = MazeLocation(row: teamCoords.row-wheelResult, col: teamCoords.col)
+        let left:Cell = blocks.getVectorTypeBy(point: leftPoint)
+        
+        let topPoint:MazeLocation = MazeLocation(row: teamCoords.row, col: teamCoords.col-wheelResult)
+        let top:Cell = blocks.getVectorTypeBy(point: topPoint)
        
         
         self.scaledTiles.removeAll()
         
-        print("Checking... \(row), \(col), \(both)", rowPoint, colPoint, bothPoint)
+        print("Checking... \(row), \(col)", rowPoint, colPoint)
         if row != Cell.Blocked && row != Cell.NotFound{
             self.scaledTiles.append(rowPoint)
         }

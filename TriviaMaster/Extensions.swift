@@ -74,3 +74,22 @@ extension String {
         return decoded ?? self
     }
 }
+
+//extension UINavigationController {
+//    override open func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//    let standard = UINavigationBarAppearance()
+//    standard.backgroundColor = .clear //When you scroll or you have title (small one)
+//
+//    let compact = UINavigationBarAppearance()
+//    compact.backgroundColor = .clear //compact-height
+//
+//    let scrollEdge = UINavigationBarAppearance()
+//    scrollEdge.backgroundColor = .clear //When you have large title
+//
+//    navigationBar.standardAppearance = standard
+//    navigationBar.compactAppearance = compact
+//    navigationBar.scrollEdgeAppearance = scrollEdge
+// }
+//}
