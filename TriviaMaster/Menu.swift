@@ -15,6 +15,13 @@ struct MenuView: View {
     @Binding var activeView: PushedItem?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
+    func fetchDataFor(category:String) {
+        User.shared.resetCurrentChallengeProgress()
+        if(category == "all"){
+            API.shared.getAll()
+        }
+    }
+    
     var body: some View {
         
         ZStack{
@@ -58,6 +65,8 @@ struct MenuView: View {
                 Spacer()
                 
             }.padding(.top, 44)
-        }.navigationBarHidden(true).navigationBarBackButtonHidden(true).navigationViewStyle(StackNavigationViewStyle())
+        }.navigationBarHidden(true).navigationBarBackButtonHidden(true).navigationViewStyle(StackNavigationViewStyle()).onAppear(perform: {
+            fetchDataFor(category: "all")
+        })
     }
 }

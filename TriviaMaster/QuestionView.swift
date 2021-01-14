@@ -154,7 +154,7 @@ struct QuestionView:View {
                         Text("Question").font(.custom("KGBlankSpaceSolid", size: 34)).foregroundColor(.white)
                         Text(String("(\(currentQuestion) / \(totalQuestions))")).font(.custom("KGBlankSpaceSolid", size: 20)).foregroundColor(.white)
                     }
-                    Text(self.categoryName).font(.custom("KGBlankSpaceSolid", size: 18)).foregroundColor(colors[colorIndex]).padding(.bottom, 10).padding(.leading, 10).padding(.trailing, 10)
+                    Text(self.categoryName.capitalized).font(.custom("KGBlankSpaceSolid", size: 18)).foregroundColor(colors[colorIndex]).padding(.bottom, 10).padding(.leading, 10).padding(.trailing, 10)
                    
                     ZStack{
                         RoundedRectangle(cornerRadius: 15)

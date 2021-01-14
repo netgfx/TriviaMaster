@@ -12,7 +12,7 @@ import NavigationStack
 struct UserProfile:View {
     
     @Binding var activeView:PushedItem?
-    
+    @State var profileURL:String = User.shared.profileImageURL
     @ObservedObject private var userprogress:User = User.shared
     init(activeView:Binding<PushedItem?>) {
         UITabBar.appearance().shadowImage = UIImage()
@@ -30,46 +30,52 @@ struct UserProfile:View {
     
     
     var body: some View {
-            
-            ZStack{
-                SwiftUI.Color.init(red: 133/255, green: 87/255, blue: 160/255, opacity: 1).edgesIgnoringSafeArea(.all)
-                VStack {
-                    BackArrowWithoutTimer()
-                    //ScrollView(.vertical){
-                    VStack(spacing: 20){
-                        VStack {
-                            PushView(destination: ProfileEditor(activeView: $activeView)) {
+        
+        ZStack{
+            SwiftUI.Color.init(red: 133/255, green: 87/255, blue: 160/255, opacity: 1).edgesIgnoringSafeArea(.all)
+            VStack {
+                BackArrowWithoutTimer()
+                //ScrollView(.vertical){
+                VStack(spacing: 20){
+                    VStack {
+                        PushView(destination: ProfileEditor(activeView: $activeView)) {
+                            
+                            if profileURL == "" {
                                 Image("user").resizable()
                                     .clipShape(Circle())
                                     .shadow(radius: 10)
                                     .frame(width: 96, height: 96, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                                     .overlay(Circle().stroke(Color.white, lineWidth: 4))
                             }
-                            
-                            Text(User.shared.getName()).font(.custom("KGBlankSpaceSolid", size: 18)).foregroundColor(.white)
+                            else {
+                                SimpleProfileImage(completeURL: $profileURL)
+                            }
                         }
                         
-                        // CATEGORIES //
-                        VStack(spacing:20){
-                            HStack(spacing:20){
-                                CategoryBox(category: "general", categoryName: "General", colorIndex: 0)
-                                CategoryBox(category: "film", categoryName: "Film", colorIndex: 1)
-                                CategoryBox(category: "tv", categoryName: "TV", colorIndex: 2)
-                            }
-                            HStack(spacing:20){
-                                CategoryBox(category: "science", categoryName: "Science", colorIndex: 3)
-                                CategoryBox(category: "geography", categoryName: "Geography", colorIndex: 4)
-                                CategoryBox(category: "history", categoryName: "History", colorIndex: 5)
-                            }
-                            HStack(spacing:20){
-                                CategoryBox(category: "sports", categoryName: "Sports", colorIndex: 6)
-                                CategoryBox(category: "celebrity", categoryName: "Celebrity", colorIndex: 7)
-                                CategoryBox(category: "computer", categoryName: "Computer", colorIndex: 8)
-                            }
+                        Text(User.shared.getName()).font(.custom("KGBlankSpaceSolid", size: 18)).foregroundColor(.white)
+                    }
+                    
+                    // CATEGORIES //
+                    VStack(spacing:20){
+                        HStack(spacing:20){
+                            CategoryBox(category: "general", categoryName: "General", colorIndex: 0)
+                            CategoryBox(category: "film", categoryName: "Film", colorIndex: 1)
+                            CategoryBox(category: "tv", categoryName: "TV", colorIndex: 2)
+                        }
+                        HStack(spacing:20){
+                            CategoryBox(category: "science", categoryName: "Science", colorIndex: 3)
+                            CategoryBox(category: "geography", categoryName: "Geography", colorIndex: 4)
+                            CategoryBox(category: "history", categoryName: "History", colorIndex: 5)
+                        }
+                        HStack(spacing:20){
+                            CategoryBox(category: "sports", categoryName: "Sports", colorIndex: 6)
+                            CategoryBox(category: "celebrity", categoryName: "Celebrity", colorIndex: 7)
+                            CategoryBox(category: "computer", categoryName: "Computer", colorIndex: 8)
                         }
                     }
-                    Spacer()
                 }
+                Spacer()
             }
         }
+    }
 }

@@ -17,7 +17,7 @@ struct ProfileEditor: View {
     
     @Binding var activeView: PushedItem?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
+    @State var profileURL:String = User.shared.profileImageURL
     @State private var imgurl:String = ""
     @State private var selectedTopType:Int = 0
     @State private var selectedHatColorType = 0
@@ -66,7 +66,12 @@ struct ProfileEditor: View {
                 
                 VStack(spacing: 20){
                     
-                    ProfileImage(mood: $mood, gender: $gender, selectedMood: $selectedMood, selectedType: $selectedType, randomSeed: $randomSeed)
+                    if profileURL == "" {
+                        ProfileImage(mood: $mood, gender: $gender, selectedMood: $selectedMood, selectedType: $selectedType, randomSeed: $randomSeed)
+                    }
+                    else {
+                        SimpleProfileImage(completeURL: $profileURL)
+                    }
                     //                    HStack{
                     //                        Spacer()
                     //                        ZStack{
@@ -95,7 +100,7 @@ struct ProfileEditor: View {
                 }.onAppear {
                     UITableView.appearance().backgroundColor = .clear
                 }.background(SwiftUI.Color.init(red: 133/255, green: 87/255, blue: 160/255, opacity: 1).edgesIgnoringSafeArea(.all)).sheet(isPresented: $pickersPresented) {
-                    PickersView(selectedMood: $selectedMood, selectedType: $selectedType, randomSeed: $randomSeed, mood: self.$mood, gender: self.$gender)
+                    PickersView(selectedMood: $selectedMood, selectedType: $selectedType, randomSeed: $randomSeed, mood: self.$mood, gender: self.$gender, pickersPresented: self.$pickersPresented)
                 }
             }
             //}
@@ -111,7 +116,10 @@ struct PickersView:View {
     @Binding var randomSeed:String
     @Binding var mood:Array<String>
     @Binding var gender:Array<String>
-    
+    @Binding var pickersPresented:Bool
+    @State var imageURL:String = User.shared.profileImageURL
+    var radius:String = "40"
+    var baseURL: String = "https://avatars.dicebear.com/4.5/api/"
     func randomString(length: Int) -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         return String((0..<length).map{ _ in letters.randomElement()! })
@@ -121,51 +129,76 @@ struct PickersView:View {
         randomSeed = self.randomString(length: 100)
     }
     
+    func dismissView() {
+        self.pickersPresented.toggle()
+    }
+    
+    func saveImage() {
+        User.shared.setProfileImgURL(imgURL: "\(self.baseURL)\(gender[selectedType])/\(randomSeed).svg?r=\(radius)&mood[]=\(mood[selectedMood])")
+        self.dismissView()
+    }
+    
     var body: some View {
         
         ZStack{
             SwiftUI.Color.init(red: 133/255, green: 87/255, blue: 160/255, opacity: 1).edgesIgnoringSafeArea(.all)
             VStack{
                 HStack{
-                    Image("fail-particle").resizable().frame(width: 48, height: 48, alignment: .center).padding(.leading, 40)
+                    Image("fail-particle").resizable().frame(width: 36, height: 36, alignment: .center).padding(.leading, 20).padding(.top, 15)
                     Spacer()
-                }
+                }.onTapGesture(perform: self.dismissView)
                 
                 NavigationView {
                     ZStack{
                         SwiftUI.Color.init(red: 133/255, green: 87/255, blue: 160/255, opacity: 1).edgesIgnoringSafeArea(.all)
-                    
-                    VStack(spacing: 20){
                         
-                        ProfileImage(mood: $mood, gender: $gender, selectedMood: $selectedMood, selectedType: $selectedType, randomSeed: $randomSeed)
-                        
-                        Form {
+                        VStack(spacing: 20){
                             
-                            Section {
-                                Picker(selection: $selectedMood, label: Text("Mood")) {
-                                    ForEach(0 ..< self.mood.count) { index in
-                                        CustomText(text: self.mood[index], size: 18, color: .white)
+                            
+                                ProfileImage(mood: $mood, gender: $gender, selectedMood: $selectedMood, selectedType: $selectedType, randomSeed: $randomSeed)
+                            
+                            Form {
+                                
+                                Section {
+                                    Picker(selection: $selectedMood, label: CustomText(text: "Mood", size: 18, color: purpleColor)) {
+                                        ForEach(0 ..< self.mood.count) { index in
+                                            CustomText(text: self.mood[index], size: 16, color: .black)
+                                        }
+                                    }
+                                }.listRowBackground(Color.clear)
+                                
+                                Section {
+                                    Picker(selection: $selectedType, label: CustomText(text: "Type", size: 18, color: purpleColor)) {
+                                        ForEach(0 ..< self.gender.count) { index in
+                                            CustomText(text: self.gender[index], size: 16, color: .black)
+                                        }
                                     }
                                 }
-                            }.listRowBackground(Color.clear)
-                            
-                            Section {
-                                Picker(selection: $selectedType, label: Text("Type")) {
-                                    ForEach(0 ..< self.gender.count) { index in
-                                        CustomText(text: self.gender[index], size: 18, color: .white)
-                                    }
+                                
+                                Section {
+                                    Button(action:setRandomSeed) {
+                                        HStack{
+                                            Spacer()
+                                            CustomText(text: "Randomize", size: 16, color: .black).multilineTextAlignment(.center)
+                                            Spacer()
+                                        }
+                                        
+                                    }.multilineTextAlignment(.center)
                                 }
                             }
-                            
-                            Section {
-                                Button(action:setRandomSeed) {
-                                    CustomText(text: "Randomize", size: 18, color: .white)
-                                }
-                            }
+                            Spacer()
+                            ZStack{
+                                RoundedRectangle(cornerRadius: 15)
+                                    .fill(Color.white).frame(width: 345, height: 50, alignment: .center)
+                                CustomText(text: "Save", size: 18, color: purpleColor)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                                .frame(width: 345, height: 50)
+                                .background(RoundedRectangle(cornerRadius: 15.0).stroke(Color.white, lineWidth: 3))
+                            }.onTapGesture(perform: saveImage)
                             
                         }
-                    }
-                }.background(Color.clear)
+                    }.background(Color.clear)
                 }
             }
         }

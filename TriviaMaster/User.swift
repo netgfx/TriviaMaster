@@ -74,6 +74,7 @@ class CategoryStats:NSObject, Decodable, NSCoding {
 class User: ObservableObject {
     static let shared = User()
     
+    @Published var profileImageURL:String = ""
     @Published var currentChallengeProgress:Int = 0
     @Published var difficulty:Double = 0
     @Published var categories:Dictionary<String,CategoryStats> = [
@@ -149,10 +150,12 @@ class User: ObservableObject {
     
     func setProfileImgURL(imgURL: String)  {
         defaults.setValue(imgURL, forKey: "profileImgURL")
+        self.profileImageURL = imgURL
     }
     
     func getProfileImgURL() -> String {
-        return defaults.string(forKey: "profileImgURL") ?? ""
+        self.profileImageURL = defaults.string(forKey: "profileImgURL") ?? ""
+        return self.profileImageURL
     }
     
     func setResultFor(category:String, isWin:Bool){
@@ -243,6 +246,7 @@ class User: ObservableObject {
     private init(){
         getData()
         loadSettings()
+        _ = getProfileImgURL()
         //storeData()
     }
 }

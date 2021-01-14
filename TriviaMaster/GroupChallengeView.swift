@@ -55,7 +55,13 @@ class MazeHelper: ObservableObject {
             self.scaledTiles.append(colPoint)
         }
         
+        if left != Cell.Blocked && left != Cell.NotFound {
+            self.scaledTiles.append(leftPoint)
+        }
         
+        if top != Cell.Blocked && top != Cell.NotFound {
+            self.scaledTiles.append(topPoint)
+        }
         
         print(scaledTiles)
         
@@ -68,11 +74,23 @@ struct GroupChallengeView:View {
     
     @EnvironmentObject var navigationHelper: NavigationHelper
     @Binding var activeView: PushedItem?
-    
+    @State var questionPresented:Bool = false
     @ObservedObject var mazeHelper:MazeHelper = MazeHelper.shared
     @State var scaledTiles:Array<MazeLocation> = MazeHelper.shared.scaledTiles
     @State var whiteTeamKeys:Int = 0
     @State var blackTeamKeys:Int = 0
+    @State var isKey:Bool = false
+    @State var selectedCategory:String = "general"
+    @State var selectedColorIndex:Int = 0
+    @State var questionSuccess:Bool = false {
+        willSet{
+            print("willSet")
+        }
+        didSet{
+            print(questionSuccess)
+        }
+    }
+    var colors = [greenColor, pinkColor, purpleColor, goldColor, lightGreenColor, orangeColor, palePink, lightPurple, greenBlueColor]
     //@State var whiteTeamCurrentPos:MazeLocation = MazeLocation(row: 0, col: 0)
     //@State var blackTeamCurrentPos:MazeLocation = MazeLocation(row: 0, col: 0)
     var blocks = GroupChallenge()
@@ -131,6 +149,8 @@ struct GroupChallengeView:View {
     func onTileTapped(index:Int, innerIndex:Int) {
         print(index, innerIndex)
         self.removeMazeLocation(index: index, innerIndex: innerIndex)
+        // calculate type
+        self.toggleQuestion()
         // add persistence
         if self.mazeHelper.teamTurn == .WHITE {
             self.mazeHelper.whiteTeamCurrentLocation = MazeLocation(row: index, col: innerIndex)
@@ -192,7 +212,7 @@ struct GroupChallengeView:View {
     }
     
     func removeMazeLocation(index:Int, innerIndex: Int) {
-        var counter:Int = 0
+       
         // should probably remove them all
         self.mazeHelper.scaledTiles.removeAll()
 //        for item in self.mazeHelper.scaledTiles {
@@ -223,6 +243,10 @@ struct GroupChallengeView:View {
         }
         
         return result
+    }
+    
+    func toggleQuestion() {
+        self.questionPresented.toggle()
     }
     
     var body: some View {
@@ -308,7 +332,10 @@ struct GroupChallengeView:View {
                                 }
                                 Spacer()
                             }
-                        }.padding(.top, 20)
+                        }.padding(.top, 20).sheet(isPresented: $questionPresented) {
+                            
+                            QuestionSheet(questionIsSuccess: $questionSuccess, questionPresented: $questionPresented, isKey: $isKey, keysForWhiteTeam: $whiteTeamKeys, keysForBlackTeam: $blackTeamKeys, currentTeam: self.$mazeHelper.teamTurn, categoryName: $selectedCategory, colorIndex: $selectedColorIndex)
+                        }
                     }.padding(10).edgesIgnoringSafeArea(.all)
                     
                     
