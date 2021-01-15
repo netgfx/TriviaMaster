@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 struct DiceWheelMainView:View {
-    
+    @Binding var locked:Bool
     //@Binding var mazeHelper:MazeHelper
     
     var body: some View{
@@ -19,7 +19,7 @@ struct DiceWheelMainView:View {
             ZStack(alignment: .center){
                 HStack{
                     Spacer()
-                    DiceWheelView().frame(width: 110, height: 110, alignment: .center)
+                    DiceWheelView(locked: $locked).frame(width: 110, height: 110, alignment: .center)
                     Spacer()
                 }
             }

@@ -11,8 +11,7 @@ import Combine
 import Repeat
 
 struct QuestionSheet:View {
-    
-    @Binding var questionIsSuccess:Bool
+
     @Binding var questionPresented:Bool
     @Binding var isKey:Bool
     @Binding var keysForWhiteTeam:Int
@@ -25,7 +24,7 @@ struct QuestionSheet:View {
     @EnvironmentObject var layoutVars:LayoutVariables
     @State var completed = false
     @Binding var categoryName:String
-    @Binding var colorIndex:Int
+    @Binding var categoryColor:Color
     
     var category:String = "general"
     var colors = [greenColor, pinkColor, purpleColor, goldColor, lightGreenColor, orangeColor, palePink, lightPurple, greenBlueColor]
@@ -46,6 +45,8 @@ struct QuestionSheet:View {
     func initTimer() {
         _Utils.setCurrentTime()
         _Utils.startTimer()
+        // shuffle questions
+        self.api.shuffleQuestions(forCategory: self.category)
     }
     
     func stopTimer() {
@@ -95,16 +96,16 @@ struct QuestionSheet:View {
                     self.keysForBlackTeam += 1
                 }
             }
-            self.questionIsSuccess = true
+            MazeHelper.shared.setQuestion(success: true)
         }
         else {
-            self.questionIsSuccess = false
+            MazeHelper.shared.setQuestion(success: false)
         }
         
     }
     
     func getColor(index:Int) -> Color {
-        print(completed, _Utils.ended)
+        
         if completed == true || _Utils.ended == true {
             
             let correct:Bool = checkCorrect(index: index)
@@ -167,7 +168,7 @@ struct QuestionSheet:View {
                             HStack(spacing: 20){
                                 Text("Question").font(.custom("KGBlankSpaceSolid", size: 34)).foregroundColor(.white)
                             }
-                            Text(self.categoryName.capitalized).font(.custom("KGBlankSpaceSolid", size: 18)).foregroundColor(colors[colorIndex]).padding(.bottom, 10).padding(.leading, 10).padding(.trailing, 10)
+                            Text(self.categoryName.capitalized).font(.custom("KGBlankSpaceSolid", size: 18)).foregroundColor(categoryColor).padding(.bottom, 10).padding(.leading, 10).padding(.trailing, 10)
                             
                             ZStack{
                                 RoundedRectangle(cornerRadius: 15)
@@ -175,7 +176,7 @@ struct QuestionSheet:View {
                                 Text(getQuestion(index: 0)).font(.custom("KGBlankSpaceSolid", size: 16)).padding(.leading, 10).padding(.trailing, 10).foregroundColor(.black).fixedSize(horizontal: false, vertical: true)
                                     .multilineTextAlignment(.center)
                                     .frame(width: 350, height: 175)
-                                    .background(RoundedRectangle(cornerRadius: 15.0).stroke(colors[colorIndex], lineWidth: 3).shadow(radius: 3))
+                                    .background(RoundedRectangle(cornerRadius: 15.0).stroke(categoryColor, lineWidth: 3).shadow(radius: 3))
                             }
                             
                             // Answers

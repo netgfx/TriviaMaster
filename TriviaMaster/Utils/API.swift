@@ -193,6 +193,10 @@ class API: APIHandler,ObservableObject {
         self.getQuestions(type: .COMPUTER)
     }
     
+    func shuffleQuestions(forCategory:String) {
+        self.categories[forCategory]?.shuffle()
+    }
+    
     func getAll() {
         self.isLoading = true
         

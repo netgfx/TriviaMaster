@@ -66,6 +66,48 @@ class GroupChallenge:ObservableObject {
         }
     }
     
+    func calculateLegalPositions(currentPos:MazeLocation, steps:Int) {
+        // rows first
+        let maxRow = 7
+        let maxCol = 7
+        var finalPositions:Array<MazeLocation> = []
+        
+        // check row
+        let rowLeftovers = maxRow - currentPos.row
+        // so we have rowLeftovers towards bottom and currentPos.row towards top e.g 3, 0 has 5 slots towards bottom, and 3 towards top
+        if rowLeftovers - steps <= 0 {
+            // it fits on bottom
+            finalPositions.append(MazeLocation(row: currentPos.row+steps, col: currentPos.col))
+        }
+        else {
+            // it doesn't fit so we need to calculate the column spillover
+            let leftovers = maxRow - currentPos.row
+            let spilloverAmount = steps - leftovers // the amount of extra steps to spillover the column
+            
+            // calculate col
+            //let colLeftOvers = maxCol - currentPos.col
+            if currentPos.col + spilloverAmount <= maxCol {
+                // it fits towards the right
+                finalPositions.append(MazeLocation(row: maxRow, col: currentPos.col+spilloverAmount))
+            }
+            
+            if currentPos.col - spilloverAmount >= 0 {
+                // it also fits towards the left
+                finalPositions.append(MazeLocation(row: maxRow, col: currentPos.col - spilloverAmount))
+            }
+        }
+        
+        if currentPos.row - steps <= 0 {
+            // it fits on top
+            finalPositions.append(MazeLocation(row: currentPos.row-steps, col: currentPos.col))
+        }
+        else {
+            
+        }
+        
+        
+    }
+    
     func getMaze() -> Maze {
         var maze:Maze = []
         var counter = 0

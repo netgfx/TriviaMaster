@@ -20,8 +20,38 @@ class MazeHelper: ObservableObject {
     @Published var whiteTeamCurrentLocation:MazeLocation = MazeLocation(row: 0, col: 0)
     @Published var blackTeamCurrentLocation:MazeLocation = MazeLocation(row: 0, col: 0)
     @Published var teamTurn:TeamTurn = .WHITE
+    @Published var pointSelectedLast:MazeLocation = MazeLocation(row: 0, col: 0)
+    @Published var questionSuccess:Bool = false
     
     var blocks = GroupChallenge()
+    
+    
+    func isOnVictoryTile() -> Bool {
+        if blocks.getVectorTypeBy(point: self.pointSelectedLast) == .Goal {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    
+    func setQuestion(success:Bool) {
+        print(success)
+        self.questionSuccess = success
+    }
+    
+    func resetScaledTiles() {
+        self.scaledTiles.removeAll()
+    }
+    
+    func setPosition(forTeam:TeamTurn, position:MazeLocation) {
+        if forTeam == .WHITE {
+            self.whiteTeamCurrentLocation = position
+        }
+        else {
+            self.blackTeamCurrentLocation = position
+        }
+    }
     
     func calculateTiles(wheelResult:Int) {
         // calculate which tiles to scale based on current position and wheel result
@@ -81,15 +111,24 @@ struct GroupChallengeView:View {
     @State var blackTeamKeys:Int = 0
     @State var isKey:Bool = false
     @State var selectedCategory:String = "general"
-    @State var selectedColorIndex:Int = 0
-    @State var questionSuccess:Bool = false {
+    @State var selectedColor:Color = greenColor
+    @State var locked:Bool = false
+    @State var questionSuccess:Bool = MazeHelper.shared.questionSuccess {
         willSet{
             print("willSet")
         }
         didSet{
-            print(questionSuccess)
+            print("The question is: ", questionSuccess)
+            if questionSuccess == true {
+                // team can re-roll
+                locked = false
+            }
+            else {
+                self.goToNextTeam(index: self.mazeHelper.pointSelectedLast.row, innerIndex: self.mazeHelper.pointSelectedLast.col, movePos: false)
+            }
         }
     }
+    
     var colors = [greenColor, pinkColor, purpleColor, goldColor, lightGreenColor, orangeColor, palePink, lightPurple, greenBlueColor]
     //@State var whiteTeamCurrentPos:MazeLocation = MazeLocation(row: 0, col: 0)
     //@State var blackTeamCurrentPos:MazeLocation = MazeLocation(row: 0, col: 0)
@@ -124,6 +163,26 @@ struct GroupChallengeView:View {
         return map
     }()
     
+    func getCategoryFor(point:MazeLocation) -> String {
+        let result = localMap[point.row][point.col]
+        print(result)
+        if let category = result["category"] as? String {
+            return category
+        }
+        else {
+            return "general"
+        }
+    }
+    
+    func getColorFor(point:MazeLocation) -> Color {
+        if let color = localMap[point.row][point.col]["color"] as? Color {
+            return color
+        }
+        else {
+            return greenColor
+        }
+    }
+    
     func calculateMaze() {
         let start = MazeLocation(row: 0, col: 0)
         let maze = blocks.getMaze()
@@ -148,19 +207,32 @@ struct GroupChallengeView:View {
     
     func onTileTapped(index:Int, innerIndex:Int) {
         print(index, innerIndex)
-        self.removeMazeLocation(index: index, innerIndex: innerIndex)
+        self.selectedCategory = self.getCategoryFor(point: MazeLocation(row: index, col: innerIndex))
+        self.selectedColor = self.getColorFor(point: MazeLocation(row: index, col: innerIndex))
+        self.mazeHelper.pointSelectedLast = MazeLocation(row: index, col: innerIndex)
         // calculate type
         self.toggleQuestion()
+    }
+    
+    
+    
+    func goToNextTeam(index:Int, innerIndex: Int, movePos:Bool) {
+        self.removeMazeLocation(index: index, innerIndex: innerIndex)
         // add persistence
         if self.mazeHelper.teamTurn == .WHITE {
-            self.mazeHelper.whiteTeamCurrentLocation = MazeLocation(row: index, col: innerIndex)
+            if movePos == true {
+                self.mazeHelper.whiteTeamCurrentLocation = MazeLocation(row: index, col: innerIndex)
+            }
             setTeamTurn(team: .BLACK)
         }
         else {
-            self.mazeHelper.blackTeamCurrentLocation = MazeLocation(row: index, col: innerIndex)
+            if movePos == true {
+                self.mazeHelper.blackTeamCurrentLocation = MazeLocation(row: index, col: innerIndex)
+            }
             setTeamTurn(team: .WHITE)
         }
         
+        self.locked = false
     }
     
     func setTeamTurn(team:TeamTurn) {
@@ -169,6 +241,10 @@ struct GroupChallengeView:View {
     
     func getTeamTurn() -> String {
         return self.mazeHelper.teamTurn.rawValue.uppercased()
+    }
+    
+    func getTeamTurnEnum() -> TeamTurn {
+        return self.mazeHelper.teamTurn
     }
     
     func setScale(index:Int, innerIndex:Int) -> CGFloat {
@@ -245,8 +321,39 @@ struct GroupChallengeView:View {
         return result
     }
     
+    func onDismissQuestion() {
+        if self.mazeHelper.questionSuccess == true {
+            // team can re-roll
+            locked = false
+            // remove selected
+            self.mazeHelper.resetScaledTiles()
+            self.mazeHelper.setPosition(forTeam: self.getTeamTurnEnum(), position: self.mazeHelper.pointSelectedLast)
+            //check for win
+            if self.mazeHelper.isOnVictoryTile() == true {
+                // show victory view
+            }
+            // continue as normal
+        }
+        else {
+            self.goToNextTeam(index: self.mazeHelper.pointSelectedLast.row, innerIndex: self.mazeHelper.pointSelectedLast.col, movePos: false)
+        }
+    }
+    
     func toggleQuestion() {
         self.questionPresented.toggle()
+    }
+    
+    func getIndex(index:Int, innerIndex:Int) -> Bool {
+        return (index == 0 && innerIndex == 0)
+    }
+    
+    func getTileImage(index:Int, innerIndex:Int) -> some View {
+        if getIndex(index:index, innerIndex: innerIndex) == true {
+            return Image("start").resizable().frame(width: 32, height: 32, alignment: .center)
+        }
+        else {
+            return Image(localMap[index][innerIndex]["category"] as! String).resizable().frame(width: 24, height: 24, alignment: .center)
+        }
     }
     
     var body: some View {
@@ -270,10 +377,12 @@ struct GroupChallengeView:View {
                                 }
                                 // layout the board 8x8
                                 ForEach(0..<8, id: \.self) { innerIndex in
+                                    
                                     if localMap[index][innerIndex]["type"] as! Int == 1 {
                                         ZStack(alignment: .center){
                                             RoundedRectangle(cornerRadius: 10).fill(localMap[index][innerIndex]["color"] as! Color).frame(width: 42, height: 42, alignment: .center)
-                                            Image(localMap[index][innerIndex]["category"] as! String).resizable().frame(width: 24, height: 24, alignment: .center)
+                                            // because it didn't work inline for...reasons...
+                                            getTileImage(index:index, innerIndex: innerIndex)
                                         }
                                         .zIndex(self.setZIndex(index:index, innerIndex:innerIndex))
                                         .scaleEffect(self.setScale(index: index, innerIndex: innerIndex), anchor: .center)
@@ -317,7 +426,7 @@ struct GroupChallengeView:View {
                         
                         VStack(spacing:20) {
                             // other controls //
-                            DiceWheelMainView()
+                            DiceWheelMainView(locked: $locked).disabled(locked)
                             
                             HStack {
                                 Spacer()
@@ -332,12 +441,11 @@ struct GroupChallengeView:View {
                                 }
                                 Spacer()
                             }
-                        }.padding(.top, 20).sheet(isPresented: $questionPresented) {
+                        }.padding(.top, 20).sheet(isPresented: $questionPresented, onDismiss: onDismissQuestion) {
                             
-                            QuestionSheet(questionIsSuccess: $questionSuccess, questionPresented: $questionPresented, isKey: $isKey, keysForWhiteTeam: $whiteTeamKeys, keysForBlackTeam: $blackTeamKeys, currentTeam: self.$mazeHelper.teamTurn, categoryName: $selectedCategory, colorIndex: $selectedColorIndex)
+                            QuestionSheet(questionPresented: $questionPresented, isKey: $isKey, keysForWhiteTeam: $whiteTeamKeys, keysForBlackTeam: $blackTeamKeys, currentTeam: self.$mazeHelper.teamTurn, categoryName: $selectedCategory, categoryColor: $selectedColor)
                         }
                     }.padding(10).edgesIgnoringSafeArea(.all)
-                    
                     
                 }.ignoresSafeArea().edgesIgnoringSafeArea(.all)
             }

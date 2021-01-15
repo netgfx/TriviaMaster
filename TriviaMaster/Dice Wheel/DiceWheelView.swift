@@ -13,13 +13,14 @@ import SwiftFortuneWheel
 
 struct DiceWheelView: UIViewRepresentable {
     
+    @Binding var locked:Bool
     var nums:Array<String> = ["1", "2", "3", "4", "5", "6"]
     //@Binding var mazeHelper:MazeHelper
 //    @Binding var slicePicked:Bool
 //    @Binding var sliceIndexPicked:Int
     
-    init() {
-        
+    init(locked:Binding<Bool>) {
+        self._locked = locked
         //self._mazeHelper = mazeHelper
 //        self._slicePicked = slicePicked
 //        self._sliceIndexPicked = sliceIndexPicked
@@ -44,6 +45,7 @@ struct DiceWheelView: UIViewRepresentable {
         let fortuneWheel = SwiftFortuneWheel(frame: frame, slices: slices, configuration: .DiceWheelConfiguration)
         DispatchQueue.main.async {
             fortuneWheel.addTapGestureRecognizer{
+                self.locked = true
                 handleTap(fortuneWheel: fortuneWheel)
             }
         }
@@ -82,7 +84,7 @@ struct DiceWheelView: UIViewRepresentable {
         let index = Int.random(in: 0..<getSliceCount())
         fortuneWheel.startRotationAnimation(finishIndex: index, continuousRotationTime: 1) { result in
             print("done")
-            MazeHelper.shared.calculateTiles(wheelResult: Int(index))
+            MazeHelper.shared.calculateTiles(wheelResult: Int(index+1))
             //self.sliceIndexPicked = index
             //self.slicePicked = true
             
