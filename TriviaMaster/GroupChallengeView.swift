@@ -61,40 +61,97 @@ class MazeHelper: ObservableObject {
         // row based
         let teamCoords = self.teamTurn == .WHITE ? whiteTeamCurrentLocation : blackTeamCurrentLocation
         
-        let rowPoint = MazeLocation(row: teamCoords.row, col: teamCoords.col+wheelResult)
-        let row:Cell = blocks.getVectorTypeBy(point: rowPoint)
-        
-        let colPoint = MazeLocation(row: teamCoords.row+wheelResult, col: teamCoords.col)
-        let col:Cell = blocks.getVectorTypeBy(point: colPoint)
-        
-        let leftPoint:MazeLocation = MazeLocation(row: teamCoords.row-wheelResult, col: teamCoords.col)
-        let left:Cell = blocks.getVectorTypeBy(point: leftPoint)
-        
-        let topPoint:MazeLocation = MazeLocation(row: teamCoords.row, col: teamCoords.col-wheelResult)
-        let top:Cell = blocks.getVectorTypeBy(point: topPoint)
-       
+        blocks.resetVisited()
+        let map = blocks.getMap2D()
+        for index in 0..<map.count {
+            for innerIndex in 0..<map[index].count {
+                blocks.floodFill(row: index, col: innerIndex, step: wheelResult, teamPosition: teamCoords)
+            }
+        }
+        print(blocks.getVisited())
+        let visited = blocks.getVisited()
         
         self.scaledTiles.removeAll()
-        
-        print("Checking... \(row), \(col)", rowPoint, colPoint)
-        if row != Cell.Blocked && row != Cell.NotFound{
-            self.scaledTiles.append(rowPoint)
+        for index in 0..<visited.count {
+            for innerIndex in 0..<visited[index].count {
+                if visited[index][innerIndex] == 2 {
+                    self.scaledTiles.append(MazeLocation(row: index, col: innerIndex))
+                }
+            }
         }
         
-        if col != Cell.Blocked && col != Cell.NotFound {
-            self.scaledTiles.append(colPoint)
-        }
+        // DEPRECATED //
+//        for item in blocks.calculateLegalPositions(currentPos: teamCoords, steps: wheelResult) {
+//            print("a legal move is: ")
+//            print(item)
+//            print("type of move: ", blocks.getVectorTypeBy(point: item))
+//            print("----------------")
+//
+//            let finalItem = blocks.getVectorTypeBy(point: item)
+//            if finalItem != Cell.Blocked && finalItem != Cell.NotFound{
+//                self.scaledTiles.append(item)
+//            }
+//        }
         
-        if left != Cell.Blocked && left != Cell.NotFound {
-            self.scaledTiles.append(leftPoint)
-        }
-        
-        if top != Cell.Blocked && top != Cell.NotFound {
-            self.scaledTiles.append(topPoint)
-        }
+//        let rowPoint = MazeLocation(row: teamCoords.row, col: teamCoords.col+wheelResult)
+//        let row:Cell = blocks.getVectorTypeBy(point: rowPoint)
+//
+//        let colPoint = MazeLocation(row: teamCoords.row+wheelResult, col: teamCoords.col)
+//        let col:Cell = blocks.getVectorTypeBy(point: colPoint)
+//
+//        let leftPoint:MazeLocation = MazeLocation(row: teamCoords.row-wheelResult, col: teamCoords.col)
+//        let left:Cell = blocks.getVectorTypeBy(point: leftPoint)
+//
+//        let topPoint:MazeLocation = MazeLocation(row: teamCoords.row, col: teamCoords.col-wheelResult)
+//        let top:Cell = blocks.getVectorTypeBy(point: topPoint)
+//
+//
+//        self.scaledTiles.removeAll()
+//
+//        print("Checking... \(row), \(col)", rowPoint, colPoint)
+//        if row != Cell.Blocked && row != Cell.NotFound{
+//            self.scaledTiles.append(rowPoint)
+//        }
+//
+//        if col != Cell.Blocked && col != Cell.NotFound {
+//            self.scaledTiles.append(colPoint)
+//        }
+//
+//        if left != Cell.Blocked && left != Cell.NotFound {
+//            self.scaledTiles.append(leftPoint)
+//        }
+//
+//        if top != Cell.Blocked && top != Cell.NotFound {
+//            self.scaledTiles.append(topPoint)
+//        }
         
         print(scaledTiles)
         
+    }
+    
+    func calculateMaze(start:MazeLocation, goal:MazeLocation = MazeLocation(row: 0, col: 0)) {
+        let maze = blocks.getMaze()
+        
+        let successors = successorsForMaze(maze)
+        if let solution = dfs(initialState: start, goal: goal, goalTestFn: goalTest, successorFn: successors) {
+            let path = nodeToPath(solution)
+            print("This path contains \(path.count) steps")
+            //markMaze(&maze, path: path, start: start, goal: goal)
+            printMaze(maze)
+            for item in path {
+                self.scaledTiles.append(item)
+            }
+        }
+        else {
+            print("nothing")
+        }
+    }
+    
+    func printMaze(_ maze: Maze) {
+        for i in 0..<maze.count {
+            let val = maze[i].map{ $0.rawValue }
+            print(String(val[0]))
+        }
     }
     
     private init(){}
@@ -183,27 +240,9 @@ struct GroupChallengeView:View {
         }
     }
     
-    func calculateMaze() {
-        let start = MazeLocation(row: 0, col: 0)
-        let maze = blocks.getMaze()
-        let successors = successorsForMaze(maze)
-        if let solution = dfs(initialState: start, goalTestFn: goalTest, successorFn: successors) {
-            let path = nodeToPath(solution)
-            print(path)
-            //markMaze(&maze, path: path, start: start, goal: goal)
-            printMaze(maze)
-        }
-        else {
-            print("nothing")
-        }
-    }
     
-    func printMaze(_ maze: Maze) {
-        for i in 0..<maze.count {
-            let val = maze[i].map{ $0.rawValue }
-            print(String(val[0]))
-        }
-    }
+    
+   
     
     func onTileTapped(index:Int, innerIndex:Int) {
         print(index, innerIndex)
@@ -449,6 +488,8 @@ struct GroupChallengeView:View {
                     
                 }.ignoresSafeArea().edgesIgnoringSafeArea(.all)
             }
-        }.onAppear(perform: calculateMaze)
+        }.onAppear(perform: {
+            self.mazeHelper.calculateMaze(start:MazeLocation(row:5, col:1), goal: MazeLocation(row: 0, col: 1))
+        })
     }
 }

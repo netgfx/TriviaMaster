@@ -29,8 +29,7 @@ struct LoginView: View{
                 }.padding(.top, 100)
                 Spacer()
             }.padding(.top, 100)
-        }.navigationBarTitle("")
-        .navigationBarHidden(true)
+        }
     }
 }
 
@@ -47,8 +46,11 @@ struct RegisterButton: View {
                     print("continue to menu")
                     // save it!
                     User.shared.setName(name: self.username)
-                    activeView = .MENU
-                    navigationHelper.selection = PushedItem.MENU.rawValue
+                    DispatchQueue.main.async {
+                        activeView = .MENU
+                    }
+                    
+                    //navigationHelper.selection = PushedItem.MENU.rawValue
                 }
                 else {
                     print("empty field")

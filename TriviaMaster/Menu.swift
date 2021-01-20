@@ -63,9 +63,9 @@ struct MenuView: View {
                     Spacer()
                 }
                 Spacer()
-                
+                BottomBar(activeView: $activeView)
             }.padding(.top, 44)
-        }.navigationBarHidden(true).navigationBarBackButtonHidden(true).navigationViewStyle(StackNavigationViewStyle()).onAppear(perform: {
+        }.onAppear(perform: {
             fetchDataFor(category: "all")
         })
     }

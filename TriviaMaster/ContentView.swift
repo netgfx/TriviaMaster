@@ -69,9 +69,7 @@ struct ContentView: View {
                         // so weird, this will not work on this view it needs one child down
                         
                         Spacer()
-                        if layoutVars.showTabBar == true {
-                            BottomBar(activeView: $selectedPushedItem)
-                        }
+                        
                     }
                 }
                 Spacer()

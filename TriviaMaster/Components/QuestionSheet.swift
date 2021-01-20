@@ -46,7 +46,7 @@ struct QuestionSheet:View {
         _Utils.setCurrentTime()
         _Utils.startTimer()
         // shuffle questions
-        self.api.shuffleQuestions(forCategory: self.category)
+        self.api.shuffleQuestions(forCategory: self.categoryName.lowercased())
     }
     
     func stopTimer() {
@@ -68,15 +68,15 @@ struct QuestionSheet:View {
     }
     
     func getCorrectAnswer() -> String {
-        return String(api.categories[self.category]?[self.currentQuestion-1].correct_answer ?? "").htmlDecoded
+        return String(api.categories[self.categoryName.lowercased()]?[self.currentQuestion-1].correct_answer ?? "").htmlDecoded
     }
     
     func getQuestion(index:Int) -> String {
-        return String(api.categories[self.category]?[self.currentQuestion-1].question ?? "").htmlDecoded
+        return String(api.categories[self.categoryName.lowercased()]?[self.currentQuestion-1].question ?? "").htmlDecoded
     }
     
     func getAnswer(index:Int) -> String {
-        return String(api.categories[self.category]?[self.currentQuestion-1].incorrect_answers?[index] ?? "").htmlDecoded
+        return String(api.categories[self.categoryName.lowercased()]?[self.currentQuestion-1].incorrect_answers?[index] ?? "").htmlDecoded
     }
     
     func checkCorrect(index:Int) -> Bool {

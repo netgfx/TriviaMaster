@@ -8,7 +8,7 @@
 import Foundation
 
 
-func dfs<StateType: Hashable>(initialState: StateType, goalTestFn: (StateType) -> Bool, successorFn: (StateType) -> [StateType]) -> Node<StateType>? {
+func dfs<StateType: Hashable>(initialState: StateType, goal:MazeLocation, goalTestFn: (StateType, MazeLocation) -> Bool, successorFn: (StateType) -> [StateType]) -> Node<StateType>? {
     // frontier is where we've yet to go
     let frontier: Stack<Node<StateType>> = Stack<Node<StateType>>()
     frontier.push(thing: Node(state: initialState, parent: nil))
@@ -20,7 +20,7 @@ func dfs<StateType: Hashable>(initialState: StateType, goalTestFn: (StateType) -
         let currentNode = frontier.pop()
         let currentState = currentNode.state
         // if we found the goal, we're done
-        if goalTestFn(currentState) { return currentNode }
+        if goalTestFn(currentState, goal) { return currentNode }
         // check where we can go next and haven't explored
         for child in successorFn(currentState) where !explored.contains(child) {
             explored.insert(child)
@@ -85,7 +85,8 @@ func successorsForMaze(_ maze: Maze) -> (MazeLocation) -> [MazeLocation] {
     return successors
 }
 
-func goalTest(ml: MazeLocation) -> Bool {
-    let goal = MazeLocation(row: 7, col: 7)
+func goalTest(ml: MazeLocation, goal:MazeLocation) -> Bool {
+    //let blocks = GroupChallenge()
+    //let _goal = blocks.getCurrentGoal()
     return ml == goal
 }

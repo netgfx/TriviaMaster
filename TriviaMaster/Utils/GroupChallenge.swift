@@ -35,17 +35,70 @@ class GroupChallenge:ObservableObject {
         [5, 1, 1, 1, 1, 1, 5, 2]
     ]
     
+    var stepCounter = 0
+    var visited:Array<Array<Int>> = [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+    
+    var currentGoal:MazeLocation = MazeLocation(row: 0, col: 0)
+    
+    func setCurrentGoal(goal:MazeLocation) {
+        self.currentGoal = goal
+    }
+    
+    func getCurrentGoal() -> MazeLocation {
+        return self.currentGoal
+    }
+    
     func getMap() -> Array<Int> {
         return self.map
     }
     
+    func getMap2D() -> Array<Array<Int>> {
+        return self.map2D
+    }
+    
+    func resetVisited() {
+        // also the step counter
+        self.stepCounter = 0
+        
+        var counter = 0
+        var innerCounter = 0
+        for item in visited {
+            for _ in item {
+                visited[counter][innerCounter] = 0
+                innerCounter += 1
+            }
+            counter += 1
+            innerCounter = 0
+        }
+    }
+    
+    func getVisited() -> Array<Array<Int>> {
+        return visited
+    }
+    
     func getVectorTypeBy(point:MazeLocation) -> Cell {
+        
+        let maxRow = 7
+        let maxCol = 7
         
         if point.row < 0 {
             return Cell.NotFound
         }
         
         if point.col < 0 {
+            return Cell.NotFound
+        }
+        
+        if point.row > maxRow || point.col > maxCol {
             return Cell.NotFound
         }
         
@@ -66,7 +119,83 @@ class GroupChallenge:ObservableObject {
         }
     }
     
-    func calculateLegalPositions(currentPos:MazeLocation, steps:Int) {
+    func isValidBlock(row:Int, col:Int) -> Bool {
+        let maxRow = 7
+        let maxCol = 7
+        let type = self.getVectorTypeBy(point: MazeLocation(row: row, col: col))
+        
+        if(row<0 || row>maxRow || col<0 || col>maxCol){
+            return false
+        }
+        else{
+            print(type)
+            if type == Cell.Blocked || type == Cell.NotFound {
+                return false
+            }
+            else {
+                // finally
+                return true
+            }
+        }
+    }
+    
+    func floodFill(row:Int, col:Int, step:Int, teamPosition:MazeLocation){
+        print("checking: ", row, col)
+        if(isValidBlock(row: row, col: col) == false){     //Base case
+            return
+        }
+        
+//        if(stepCounter > step){
+//            // we walked too far
+//            return
+//        }
+        
+        // we already visited that
+        if visited[row][col] == 1 || visited[row][col] == 2 {
+            return
+        }
+        
+        // moving in the right direction
+        //if stepCounter < step {
+            stepCounter += 1
+            visited[row][col] = 1;
+        //}
+        
+        let distance = PointManhattanDistance(from: MazeLocation(row: row, col: col), to: teamPosition)
+        print("Distance: ", distance)
+        if(distance == step){
+            
+            print("adding one for step counter: ", stepCounter)
+            //Current node is marked as visited.
+            visited[row][col] = 2;
+            stepCounter = 0
+            
+            print("same as step this is the solution: ",row, col)
+        }
+        
+        floodFill(row: row-1, col: col, step: step, teamPosition: teamPosition);
+        floodFill(row: row+1, col: col, step: step, teamPosition: teamPosition);
+        floodFill(row: row, col: col-1, step: step, teamPosition: teamPosition);
+        floodFill(row: row, col: col+1, step: step, teamPosition: teamPosition);
+        
+        // no diagonal checking
+        //floodFill(i-1,j-1,idxValue);
+        //floodFill(i-1,j+1,idxValue);
+        //floodFill(i+1,j-1,idxValue);
+        //floodFill(i+1,j+1,idxValue);
+    }
+    
+    func PointDistanceSquared(from: MazeLocation, to: MazeLocation) -> Int {
+        let subRow = (from.row - to.row) * (from.row - to.row)
+        let subCol = (from.col - to.col) * (from.col - to.col)
+        return subRow + subCol
+    }
+
+    func PointManhattanDistance(from: MazeLocation, to: MazeLocation) -> Int {
+        return (abs(from.row - to.row) + abs(from.col - to.col))
+    }
+    
+    func calculateLegalPositions(currentPos:MazeLocation, steps:Int) -> Array<MazeLocation> {
         // rows first
         let maxRow = 7
         let maxCol = 7
@@ -74,9 +203,11 @@ class GroupChallenge:ObservableObject {
         
         // check row
         let rowLeftovers = maxRow - currentPos.row
+        print("Left overs and current position: ", rowLeftovers, currentPos, steps)
         // so we have rowLeftovers towards bottom and currentPos.row towards top e.g 3, 0 has 5 slots towards bottom, and 3 towards top
-        if rowLeftovers - steps <= 0 {
+        if currentPos.row + steps <= maxRow {
             // it fits on bottom
+            print("it fits in row towards bottom")
             finalPositions.append(MazeLocation(row: currentPos.row+steps, col: currentPos.col))
         }
         else {
@@ -88,23 +219,97 @@ class GroupChallenge:ObservableObject {
             //let colLeftOvers = maxCol - currentPos.col
             if currentPos.col + spilloverAmount <= maxCol {
                 // it fits towards the right
+                print("it fits in row towards right")
                 finalPositions.append(MazeLocation(row: maxRow, col: currentPos.col+spilloverAmount))
             }
             
-            if currentPos.col - spilloverAmount >= 0 {
+            if currentPos.col - abs(spilloverAmount) >= 0 {
                 // it also fits towards the left
-                finalPositions.append(MazeLocation(row: maxRow, col: currentPos.col - spilloverAmount))
+                print("it fits in row towards left")
+                finalPositions.append(MazeLocation(row: maxRow, col: currentPos.col - abs(spilloverAmount)))
             }
         }
         
-        if currentPos.row - steps <= 0 {
+        if currentPos.row - steps >= 0 {
             // it fits on top
+            print("it fits in row towards top")
             finalPositions.append(MazeLocation(row: currentPos.row-steps, col: currentPos.col))
         }
         else {
+            // it doesn't fit so we need to calculate the column spillover
+            let leftovers = maxRow - currentPos.row
+            let spilloverAmount = steps - leftovers // the amount of extra steps to spillover the column
+            
+            // calculate col
+            //let colLeftOvers = maxCol - currentPos.col
+            if currentPos.col + spilloverAmount <= maxCol {
+                // it fits towards the right
+                print("it fits in row towards right")
+                finalPositions.append(MazeLocation(row: maxRow, col: currentPos.col+spilloverAmount))
+            }
+            
+            if currentPos.col - abs(spilloverAmount) >= 0 {
+                // it also fits towards the left
+                print("it fits in row towards left")
+                finalPositions.append(MazeLocation(row: maxRow, col: currentPos.col - abs(spilloverAmount)))
+            }
+        }
+        
+        // end of rows ^v
+        
+        if currentPos.col + steps <= maxCol {
+            // it fits on bottom
+            print("it fits in column right")
+            finalPositions.append(MazeLocation(row: currentPos.row, col: currentPos.col+steps))
+        }
+        else {
+            // it doesn't fit so we need to calculate the column spillover
+            let leftovers = maxCol - currentPos.col
+            let spilloverAmount = steps - leftovers // the amount of extra steps to spillover the column
+            
+            // calculate col
+            //let colLeftOvers = maxCol - currentPos.col
+            if currentPos.row + spilloverAmount <= maxRow {
+                // it fits towards the right
+                print("it fits in column towards bottom ", spilloverAmount)
+                finalPositions.append(MazeLocation(row: currentPos.row+spilloverAmount, col: maxCol))
+            }
+            
+            if currentPos.row - abs(spilloverAmount) >= 0 {
+                // it also fits towards the left
+                print("it fits in column towards top ", spilloverAmount)
+                finalPositions.append(MazeLocation(row: currentPos.row - abs(spilloverAmount), col: maxCol))
+            }
+        }
+        
+        if currentPos.col - steps >= 0 {
+            // it fits on top
+            print("it fits in column left")
+            finalPositions.append(MazeLocation(row: currentPos.row, col: currentPos.col-steps))
+        }
+        else {
+            // it doesn't fit so we need to calculate the column spillover
+            let leftovers = maxCol - currentPos.col
+            let spilloverAmount = steps - leftovers // the amount of extra steps to spillover the column
+            
+            // calculate col
+            //let colLeftOvers = maxCol - currentPos.col
+            if currentPos.row + spilloverAmount <= maxRow {
+                // it fits towards the right
+                print("it fits in column top towards bottom ", spilloverAmount)
+                finalPositions.append(MazeLocation(row: currentPos.row + spilloverAmount, col: maxCol))
+            }
+            
+            if currentPos.col - abs(spilloverAmount) >= 0 {
+                // it also fits towards the left
+                print("it fits in column top towards top ", spilloverAmount)
+                finalPositions.append(MazeLocation(row: currentPos.row - abs(spilloverAmount), col: maxCol))
+            }
             
         }
         
+        
+        return finalPositions
         
     }
     
