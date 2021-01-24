@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "Connection",
+        "repositoryURL": "https://github.com/zntfdr/Connection.git",
+        "state": {
+          "branch": null,
+          "revision": "90ab1743dd639a705bf7a9a4cce3b9631d23e4c0",
+          "version": "1.0.0"
+        }
+      },
+      {
         "package": "Macaw",
         "repositoryURL": "https://github.com/exyte/Macaw.git",
         "state": {

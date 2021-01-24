@@ -14,8 +14,6 @@ struct QuestionSheet:View {
 
     @Binding var questionPresented:Bool
     @Binding var isKey:Bool
-    @Binding var keysForWhiteTeam:Int
-    @Binding var keysForBlackTeam:Int
     @Binding var currentTeam:TeamTurn
     @State var currentQuestion = 1
     @State var victory:Bool = false
@@ -89,12 +87,7 @@ struct QuestionSheet:View {
         
         if isWin == true {
             if isKey == true {
-                if self.currentTeam == .WHITE {
-                    self.keysForWhiteTeam += 1
-                }
-                else {
-                    self.keysForBlackTeam += 1
-                }
+                MazeHelper.shared.setTeamKeysFor(team: self.currentTeam)
             }
             MazeHelper.shared.setQuestion(success: true)
         }

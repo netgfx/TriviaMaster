@@ -167,7 +167,10 @@ class GroupChallenge:ObservableObject {
             
             print("adding one for step counter: ", stepCounter)
             //Current node is marked as visited.
+            // check if path contains valid number of steps, we use DFS for this
+            
             visited[row][col] = 2;
+           
             stepCounter = 0
             
             print("same as step this is the solution: ",row, col)
@@ -195,6 +198,59 @@ class GroupChallenge:ObservableObject {
         return (abs(from.row - to.row) + abs(from.col - to.col))
     }
     
+    func calculateMaze(start:MazeLocation, goal:MazeLocation = MazeLocation(row: 0, col: 0), limit:Int) -> Bool {
+        let maze = self.getMaze()
+        
+        let successors = successorsForMaze(maze)
+        if let solution = dfs(initialState: start, goal: goal, goalTestFn: goalTest, successorFn: successors) {
+            let path = nodeToPath(solution)
+            print("This path contains \(path.count) steps, limit is \(limit)")
+            //markMaze(&maze, path: path, start: start, goal: goal)
+            //printMaze(maze)
+            if path.count-1 > limit {
+                return false
+            }
+            else if path.count-1 == limit {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+        else {
+            print("nothing")
+            return false
+        }
+    }
+    
+    func pathContainsBlocked(pointA:MazeLocation, pointB:MazeLocation) -> Bool? {
+        var rowBased:Bool = false
+        var colBased:Bool = false
+        let result:Bool? = nil
+        if pointA.row == pointB.row {
+            rowBased = true
+        }
+        else if pointA.col == pointB.col {
+            colBased = true
+        }
+        else {
+            // can't make assumption
+            return nil
+        }
+        
+        return result
+    }
+    
+    func printMaze(_ maze: Maze) {
+        for i in 0..<maze.count {
+            let val = maze[i].map{ $0.rawValue }
+            print(String(val[0]))
+        }
+    }
+    
+    /**
+        Deprecated
+    */
     func calculateLegalPositions(currentPos:MazeLocation, steps:Int) -> Array<MazeLocation> {
         // rows first
         let maxRow = 7

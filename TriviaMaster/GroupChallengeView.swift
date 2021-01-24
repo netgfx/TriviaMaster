@@ -22,9 +22,25 @@ class MazeHelper: ObservableObject {
     @Published var teamTurn:TeamTurn = .WHITE
     @Published var pointSelectedLast:MazeLocation = MazeLocation(row: 0, col: 0)
     @Published var questionSuccess:Bool = false
+    @Published var whiteTeamKeys:Int = 0
+    @Published var blackTeamKeys:Int = 0
     
     var blocks = GroupChallenge()
     
+    func setTeamKeysFor(team:TeamTurn) {
+        if team == .WHITE {
+            whiteTeamKeys += 1
+            if whiteTeamKeys > 3 {
+                whiteTeamKeys = 3
+            }
+        }
+        else {
+            blackTeamKeys += 1
+            if blackTeamKeys > 3 {
+                blackTeamKeys = 3
+            }
+        }
+    }
     
     func isOnVictoryTile() -> Bool {
         if blocks.getVectorTypeBy(point: self.pointSelectedLast) == .Goal {
@@ -62,6 +78,7 @@ class MazeHelper: ObservableObject {
         let teamCoords = self.teamTurn == .WHITE ? whiteTeamCurrentLocation : blackTeamCurrentLocation
         
         blocks.resetVisited()
+        resetScaledTiles()
         let map = blocks.getMap2D()
         for index in 0..<map.count {
             for innerIndex in 0..<map[index].count {
@@ -75,84 +92,69 @@ class MazeHelper: ObservableObject {
         for index in 0..<visited.count {
             for innerIndex in 0..<visited[index].count {
                 if visited[index][innerIndex] == 2 {
-                    self.scaledTiles.append(MazeLocation(row: index, col: innerIndex))
+                    // algorithm is not smart enough to take shortest path depending where it starts from :(
+                    // because of inate DFS short
+                    
+                    // so we used BFS!
+                    let path = BFS().findPath(start:MazeLocation(row: teamCoords.row,col:teamCoords.col), end:MazeLocation(row:index,col:innerIndex))
+                    
+                    if path.count-1 == wheelResult {
+                        self.scaledTiles.append(MazeLocation(row: index, col: innerIndex))
+                    }
                 }
             }
         }
         
         // DEPRECATED //
-//        for item in blocks.calculateLegalPositions(currentPos: teamCoords, steps: wheelResult) {
-//            print("a legal move is: ")
-//            print(item)
-//            print("type of move: ", blocks.getVectorTypeBy(point: item))
-//            print("----------------")
-//
-//            let finalItem = blocks.getVectorTypeBy(point: item)
-//            if finalItem != Cell.Blocked && finalItem != Cell.NotFound{
-//                self.scaledTiles.append(item)
-//            }
-//        }
+        //        for item in blocks.calculateLegalPositions(currentPos: teamCoords, steps: wheelResult) {
+        //            print("a legal move is: ")
+        //            print(item)
+        //            print("type of move: ", blocks.getVectorTypeBy(point: item))
+        //            print("----------------")
+        //
+        //            let finalItem = blocks.getVectorTypeBy(point: item)
+        //            if finalItem != Cell.Blocked && finalItem != Cell.NotFound{
+        //                self.scaledTiles.append(item)
+        //            }
+        //        }
         
-//        let rowPoint = MazeLocation(row: teamCoords.row, col: teamCoords.col+wheelResult)
-//        let row:Cell = blocks.getVectorTypeBy(point: rowPoint)
-//
-//        let colPoint = MazeLocation(row: teamCoords.row+wheelResult, col: teamCoords.col)
-//        let col:Cell = blocks.getVectorTypeBy(point: colPoint)
-//
-//        let leftPoint:MazeLocation = MazeLocation(row: teamCoords.row-wheelResult, col: teamCoords.col)
-//        let left:Cell = blocks.getVectorTypeBy(point: leftPoint)
-//
-//        let topPoint:MazeLocation = MazeLocation(row: teamCoords.row, col: teamCoords.col-wheelResult)
-//        let top:Cell = blocks.getVectorTypeBy(point: topPoint)
-//
-//
-//        self.scaledTiles.removeAll()
-//
-//        print("Checking... \(row), \(col)", rowPoint, colPoint)
-//        if row != Cell.Blocked && row != Cell.NotFound{
-//            self.scaledTiles.append(rowPoint)
-//        }
-//
-//        if col != Cell.Blocked && col != Cell.NotFound {
-//            self.scaledTiles.append(colPoint)
-//        }
-//
-//        if left != Cell.Blocked && left != Cell.NotFound {
-//            self.scaledTiles.append(leftPoint)
-//        }
-//
-//        if top != Cell.Blocked && top != Cell.NotFound {
-//            self.scaledTiles.append(topPoint)
-//        }
+        //        let rowPoint = MazeLocation(row: teamCoords.row, col: teamCoords.col+wheelResult)
+        //        let row:Cell = blocks.getVectorTypeBy(point: rowPoint)
+        //
+        //        let colPoint = MazeLocation(row: teamCoords.row+wheelResult, col: teamCoords.col)
+        //        let col:Cell = blocks.getVectorTypeBy(point: colPoint)
+        //
+        //        let leftPoint:MazeLocation = MazeLocation(row: teamCoords.row-wheelResult, col: teamCoords.col)
+        //        let left:Cell = blocks.getVectorTypeBy(point: leftPoint)
+        //
+        //        let topPoint:MazeLocation = MazeLocation(row: teamCoords.row, col: teamCoords.col-wheelResult)
+        //        let top:Cell = blocks.getVectorTypeBy(point: topPoint)
+        //
+        //
+        //        self.scaledTiles.removeAll()
+        //
+        //        print("Checking... \(row), \(col)", rowPoint, colPoint)
+        //        if row != Cell.Blocked && row != Cell.NotFound{
+        //            self.scaledTiles.append(rowPoint)
+        //        }
+        //
+        //        if col != Cell.Blocked && col != Cell.NotFound {
+        //            self.scaledTiles.append(colPoint)
+        //        }
+        //
+        //        if left != Cell.Blocked && left != Cell.NotFound {
+        //            self.scaledTiles.append(leftPoint)
+        //        }
+        //
+        //        if top != Cell.Blocked && top != Cell.NotFound {
+        //            self.scaledTiles.append(topPoint)
+        //        }
         
         print(scaledTiles)
         
     }
     
-    func calculateMaze(start:MazeLocation, goal:MazeLocation = MazeLocation(row: 0, col: 0)) {
-        let maze = blocks.getMaze()
-        
-        let successors = successorsForMaze(maze)
-        if let solution = dfs(initialState: start, goal: goal, goalTestFn: goalTest, successorFn: successors) {
-            let path = nodeToPath(solution)
-            print("This path contains \(path.count) steps")
-            //markMaze(&maze, path: path, start: start, goal: goal)
-            printMaze(maze)
-            for item in path {
-                self.scaledTiles.append(item)
-            }
-        }
-        else {
-            print("nothing")
-        }
-    }
     
-    func printMaze(_ maze: Maze) {
-        for i in 0..<maze.count {
-            let val = maze[i].map{ $0.rawValue }
-            print(String(val[0]))
-        }
-    }
     
     private init(){}
 }
@@ -164,8 +166,6 @@ struct GroupChallengeView:View {
     @State var questionPresented:Bool = false
     @ObservedObject var mazeHelper:MazeHelper = MazeHelper.shared
     @State var scaledTiles:Array<MazeLocation> = MazeHelper.shared.scaledTiles
-    @State var whiteTeamKeys:Int = 0
-    @State var blackTeamKeys:Int = 0
     @State var isKey:Bool = false
     @State var selectedCategory:String = "general"
     @State var selectedColor:Color = greenColor
@@ -190,8 +190,8 @@ struct GroupChallengeView:View {
     //@State var whiteTeamCurrentPos:MazeLocation = MazeLocation(row: 0, col: 0)
     //@State var blackTeamCurrentPos:MazeLocation = MazeLocation(row: 0, col: 0)
     var blocks = GroupChallenge()
-//    @State var slicePicked:Bool = false
-//    @State var sliceIndexPicked:Int = 0
+    //    @State var slicePicked:Bool = false
+    //    @State var sliceIndexPicked:Int = 0
     
     // pre-configure the board ;)
     var localMap:Array<Array<Dictionary<String, Any>>> = {
@@ -242,7 +242,7 @@ struct GroupChallengeView:View {
     
     
     
-   
+    
     
     func onTileTapped(index:Int, innerIndex:Int) {
         print(index, innerIndex)
@@ -327,15 +327,15 @@ struct GroupChallengeView:View {
     }
     
     func removeMazeLocation(index:Int, innerIndex: Int) {
-       
+        
         // should probably remove them all
         self.mazeHelper.scaledTiles.removeAll()
-//        for item in self.mazeHelper.scaledTiles {
-//            if item.row == index {
-//                self.mazeHelper.scaledTiles.remove(at: counter)
-//            }
-//            counter += 1
-//        }
+        //        for item in self.mazeHelper.scaledTiles {
+        //            if item.row == index {
+        //                self.mazeHelper.scaledTiles.remove(at: counter)
+        //            }
+        //            counter += 1
+        //        }
     }
     
     func getTeamColor() -> Color {
@@ -358,6 +358,56 @@ struct GroupChallengeView:View {
         }
         
         return result
+    }
+    
+    func getArrowRowPositionFor(team:TeamTurn) -> Float {
+        if team == .WHITE {
+            let row = self.mazeHelper.whiteTeamCurrentLocation.row
+            let steps = row * 42 // tile size
+            return Float(steps) - (42*0.5)
+        }
+        else {
+            let row = self.mazeHelper.blackTeamCurrentLocation.row
+            let steps = row * 42 // tile size
+            return Float(steps) - (42*0.5)
+        }
+    }
+    
+    func getArrowColumnPositionFor(team:TeamTurn) -> Float {
+        if team == .WHITE {
+            let col = self.mazeHelper.whiteTeamCurrentLocation.col
+            let steps = col * 42 // tile size
+            return Float(steps) - (42*0.5)
+        }
+        else {
+            let col = self.mazeHelper.blackTeamCurrentLocation.col
+            let steps = col * 42 // tile size
+            return Float(steps) - (42*0.5)
+        }
+    }
+    
+    func getWhiteTeamPosition(row:Int, col: Int) -> some View {
+        return Group{
+            if self.mazeHelper.whiteTeamCurrentLocation.row == row && self.mazeHelper.whiteTeamCurrentLocation.col == col {
+                
+                Image("arrow-down-white").resizable().frame(width:20, height:20, alignment: .center).offset(y: -12).padding(.top, -12)
+            }
+            
+            else {
+                Group{ EmptyView() }
+            }
+        }
+    }
+    
+    func getBlackTeamPosition(row:Int, col: Int) -> some View {
+        return Group{
+            if self.mazeHelper.blackTeamCurrentLocation.row == row && self.mazeHelper.blackTeamCurrentLocation.col == col {
+                Image("arrow-down-black").resizable().frame(width:20, height:20, alignment: .center).offset(y: -12).padding(.top, -12).rotationEffect(.degrees(-90))
+            }
+            else {
+                EmptyView()
+            }
+        }
     }
     
     func onDismissQuestion() {
@@ -419,9 +469,16 @@ struct GroupChallengeView:View {
                                     
                                     if localMap[index][innerIndex]["type"] as! Int == 1 {
                                         ZStack(alignment: .center){
+                                            
                                             RoundedRectangle(cornerRadius: 10).fill(localMap[index][innerIndex]["color"] as! Color).frame(width: 42, height: 42, alignment: .center)
                                             // because it didn't work inline for...reasons...
                                             getTileImage(index:index, innerIndex: innerIndex)
+                                            
+                                            getWhiteTeamPosition(row:index, col: innerIndex)
+                                            
+                                            getBlackTeamPosition(row: index, col: innerIndex)
+                                            
+                                            
                                         }
                                         .zIndex(self.setZIndex(index:index, innerIndex:innerIndex))
                                         .scaleEffect(self.setScale(index: index, innerIndex: innerIndex), anchor: .center)
@@ -471,25 +528,25 @@ struct GroupChallengeView:View {
                                 Spacer()
                                 HStack(spacing:10){
                                     CustomText(text: "W", size: 51, color: .white)
-                                    CustomText(text: String(self.whiteTeamKeys)+"/3", size: 24, color:.white)
+                                    CustomText(text: String(self.mazeHelper.whiteTeamKeys)+"/3", size: 24, color:.white)
                                 }
                                 Spacer()
                                 HStack(spacing:10){
                                     CustomText(text: "B", size: 51, color: .black)
-                                    CustomText(text: String(self.blackTeamKeys)+"/3", size: 24, color:.black)
+                                    CustomText(text: String(self.mazeHelper.blackTeamKeys)+"/3", size: 24, color:.black)
                                 }
                                 Spacer()
                             }
                         }.padding(.top, 20).sheet(isPresented: $questionPresented, onDismiss: onDismissQuestion) {
                             
-                            QuestionSheet(questionPresented: $questionPresented, isKey: $isKey, keysForWhiteTeam: $whiteTeamKeys, keysForBlackTeam: $blackTeamKeys, currentTeam: self.$mazeHelper.teamTurn, categoryName: $selectedCategory, categoryColor: $selectedColor)
+                            QuestionSheet(questionPresented: $questionPresented, isKey: $isKey, currentTeam: self.$mazeHelper.teamTurn, categoryName: $selectedCategory, categoryColor: $selectedColor)
                         }
                     }.padding(10).edgesIgnoringSafeArea(.all)
                     
-                }.ignoresSafeArea().edgesIgnoringSafeArea(.all)
+                }.ignoresSafeArea().edgesIgnoringSafeArea(.all).onAppear(perform:{
+                    self.mazeHelper.resetScaledTiles()
+                })
             }
-        }.onAppear(perform: {
-            self.mazeHelper.calculateMaze(start:MazeLocation(row:5, col:1), goal: MazeLocation(row: 0, col: 1))
-        })
+        }
     }
 }

@@ -63,6 +63,10 @@
 		42DD8E5B259C5E81001ACFC3 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DD8E5A259C5E81001ACFC3 /* Login.swift */; };
 		42DD8E5F259C851F001ACFC3 /* Repeat in Frameworks */ = {isa = PBXBuildFile; productRef = 42DD8E5E259C851F001ACFC3 /* Repeat */; };
 		42DD8E62259C9FB8001ACFC3 /* BackArrowWithoutTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DD8E61259C9FB8001ACFC3 /* BackArrowWithoutTimer.swift */; };
+		42DE27EC25B9FC960060FC20 /* Connection in Frameworks */ = {isa = PBXBuildFile; productRef = 42DE27EB25B9FC960060FC20 /* Connection */; };
+		42DE27EF25BAD2ED0060FC20 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DE27EE25BAD2ED0060FC20 /* Grid.swift */; };
+		42DE27F225BAD5EE0060FC20 /* GridNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DE27F125BAD5EE0060FC20 /* GridNode.swift */; };
+		42DE27F525BADBA00060FC20 /* BFS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DE27F425BADBA00060FC20 /* BFS.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -117,6 +121,9 @@
 		42DD8E57259C5E3C001ACFC3 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		42DD8E5A259C5E81001ACFC3 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		42DD8E61259C9FB8001ACFC3 /* BackArrowWithoutTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackArrowWithoutTimer.swift; sourceTree = "<group>"; };
+		42DE27EE25BAD2ED0060FC20 /* Grid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
+		42DE27F125BAD5EE0060FC20 /* GridNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridNode.swift; sourceTree = "<group>"; };
+		42DE27F425BADBA00060FC20 /* BFS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BFS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +133,7 @@
 			files = (
 				4233847D2590D615001D97A9 /* SDWebImageSwiftUI in Frameworks */,
 				42DD8E45259B39AC001ACFC3 /* NavigationStack in Frameworks */,
+				42DE27EC25B9FC960060FC20 /* Connection in Frameworks */,
 				42DD8E12259222C2001ACFC3 /* Macaw in Frameworks */,
 				42DD8E5F259C851F001ACFC3 /* Repeat in Frameworks */,
 				42BC22DD258E239E007B5456 /* SwiftFortuneWheel in Frameworks */,
@@ -262,6 +270,9 @@
 				42952D1B25A4EB8400A0B030 /* Node.swift */,
 				42952D1E25A4ED6200A0B030 /* DFS.swift */,
 				4204D16C25B0838F00FDA9FB /* LanguageFile.swift */,
+				42DE27EE25BAD2ED0060FC20 /* Grid.swift */,
+				42DE27F425BADBA00060FC20 /* BFS.swift */,
+				42DE27F125BAD5EE0060FC20 /* GridNode.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -290,6 +301,7 @@
 				42DD8E11259222C2001ACFC3 /* Macaw */,
 				42DD8E44259B39AC001ACFC3 /* NavigationStack */,
 				42DD8E5E259C851F001ACFC3 /* Repeat */,
+				42DE27EB25B9FC960060FC20 /* Connection */,
 			);
 			productName = TriviaMaster;
 			productReference = 42BC22C8258E22D5007B5456 /* TriviaMaster.app */;
@@ -326,6 +338,7 @@
 				42DD8E10259222C2001ACFC3 /* XCRemoteSwiftPackageReference "Macaw" */,
 				42DD8E43259B39AB001ACFC3 /* XCRemoteSwiftPackageReference "swiftui-navigation-stack" */,
 				42DD8E5D259C851E001ACFC3 /* XCRemoteSwiftPackageReference "Repeat" */,
+				42DE27EA25B9FC950060FC20 /* XCRemoteSwiftPackageReference "Connection" */,
 			);
 			productRefGroup = 42BC22C9258E22D5007B5456 /* Products */;
 			projectDirPath = "";
@@ -365,6 +378,7 @@
 				4233844B258E3873001D97A9 /* Extensions.swift in Sources */,
 				42952D09259E4FAE00A0B030 /* ResultView.swift in Sources */,
 				42952D1C25A4EB8400A0B030 /* Node.swift in Sources */,
+				42DE27EF25BAD2ED0060FC20 /* Grid.swift in Sources */,
 				42DD8E54259B7046001ACFC3 /* QuestionView.swift in Sources */,
 				423384762590D2F3001D97A9 /* ProfileEditor.swift in Sources */,
 				42952D1925A4EB4D00A0B030 /* Stack.swift in Sources */,
@@ -390,6 +404,7 @@
 				42DD8E5B259C5E81001ACFC3 /* Login.swift in Sources */,
 				4233848725910ED3001D97A9 /* Webview.swift in Sources */,
 				4204D16A25AF79F600FDA9FB /* ProfileImage.swift in Sources */,
+				42DE27F225BAD5EE0060FC20 /* GridNode.swift in Sources */,
 				42DD8E282599C039001ACFC3 /* Question.swift in Sources */,
 				42DD8E1C259364B6001ACFC3 /* CategoryBox.swift in Sources */,
 				42DD8E1925935460001ACFC3 /* UserProfile.swift in Sources */,
@@ -400,6 +415,7 @@
 				423384802590D733001D97A9 /* EditorConfig.swift in Sources */,
 				423384792590D325001D97A9 /* User.swift in Sources */,
 				42CBDECB25AAE04C00BAC8E8 /* DiceWheelView.swift in Sources */,
+				42DE27F525BADBA00060FC20 /* BFS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,6 +664,14 @@
 				minimumVersion = 0.6.0;
 			};
 		};
+		42DE27EA25B9FC950060FC20 /* XCRemoteSwiftPackageReference "Connection" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/zntfdr/Connection.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -685,6 +709,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 42DD8E5D259C851E001ACFC3 /* XCRemoteSwiftPackageReference "Repeat" */;
 			productName = Repeat;
+		};
+		42DE27EB25B9FC960060FC20 /* Connection */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 42DE27EA25B9FC950060FC20 /* XCRemoteSwiftPackageReference "Connection" */;
+			productName = Connection;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
