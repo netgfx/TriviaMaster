@@ -71,7 +71,6 @@ class MazeHelper: ObservableObject {
     
     func calculateTiles(wheelResult:Int) {
         // calculate which tiles to scale based on current position and wheel result
-        // TODO Add towards all routes
         print(wheelResult, whiteTeamCurrentLocation, blackTeamCurrentLocation)
         
         // row based
@@ -80,6 +79,7 @@ class MazeHelper: ObservableObject {
         blocks.resetVisited()
         resetScaledTiles()
         let map = blocks.getMap2D()
+        // we use flood fill algorithm to find all available points within a fixed range (wheel result) from the team coordinates
         for index in 0..<map.count {
             for innerIndex in 0..<map[index].count {
                 blocks.floodFill(row: index, col: innerIndex, step: wheelResult, teamPosition: teamCoords)
@@ -92,9 +92,8 @@ class MazeHelper: ObservableObject {
         for index in 0..<visited.count {
             for innerIndex in 0..<visited[index].count {
                 if visited[index][innerIndex] == 2 {
-                    // algorithm is not smart enough to take shortest path depending where it starts from :(
-                    // because of inate DFS short
-                    
+                    // I initially tried DFS algorithm, but it is not smart enough to take shortest path depending where it starts from :(
+                    // because of inate DFS shortcoming
                     // so we used BFS!
                     let path = BFS().findPath(start:MazeLocation(row: teamCoords.row,col:teamCoords.col), end:MazeLocation(row:index,col:innerIndex))
                     
@@ -104,51 +103,6 @@ class MazeHelper: ObservableObject {
                 }
             }
         }
-        
-        // DEPRECATED //
-        //        for item in blocks.calculateLegalPositions(currentPos: teamCoords, steps: wheelResult) {
-        //            print("a legal move is: ")
-        //            print(item)
-        //            print("type of move: ", blocks.getVectorTypeBy(point: item))
-        //            print("----------------")
-        //
-        //            let finalItem = blocks.getVectorTypeBy(point: item)
-        //            if finalItem != Cell.Blocked && finalItem != Cell.NotFound{
-        //                self.scaledTiles.append(item)
-        //            }
-        //        }
-        
-        //        let rowPoint = MazeLocation(row: teamCoords.row, col: teamCoords.col+wheelResult)
-        //        let row:Cell = blocks.getVectorTypeBy(point: rowPoint)
-        //
-        //        let colPoint = MazeLocation(row: teamCoords.row+wheelResult, col: teamCoords.col)
-        //        let col:Cell = blocks.getVectorTypeBy(point: colPoint)
-        //
-        //        let leftPoint:MazeLocation = MazeLocation(row: teamCoords.row-wheelResult, col: teamCoords.col)
-        //        let left:Cell = blocks.getVectorTypeBy(point: leftPoint)
-        //
-        //        let topPoint:MazeLocation = MazeLocation(row: teamCoords.row, col: teamCoords.col-wheelResult)
-        //        let top:Cell = blocks.getVectorTypeBy(point: topPoint)
-        //
-        //
-        //        self.scaledTiles.removeAll()
-        //
-        //        print("Checking... \(row), \(col)", rowPoint, colPoint)
-        //        if row != Cell.Blocked && row != Cell.NotFound{
-        //            self.scaledTiles.append(rowPoint)
-        //        }
-        //
-        //        if col != Cell.Blocked && col != Cell.NotFound {
-        //            self.scaledTiles.append(colPoint)
-        //        }
-        //
-        //        if left != Cell.Blocked && left != Cell.NotFound {
-        //            self.scaledTiles.append(leftPoint)
-        //        }
-        //
-        //        if top != Cell.Blocked && top != Cell.NotFound {
-        //            self.scaledTiles.append(topPoint)
-        //        }
         
         print(scaledTiles)
         

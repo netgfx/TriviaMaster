@@ -145,11 +145,6 @@ class GroupChallenge:ObservableObject {
             return
         }
         
-//        if(stepCounter > step){
-//            // we walked too far
-//            return
-//        }
-        
         // we already visited that
         if visited[row][col] == 1 || visited[row][col] == 2 {
             return
