@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import NavigationStack
 
 enum TeamTurn:String {
     case WHITE = "white"
@@ -16,6 +17,7 @@ enum TeamTurn:String {
 
 class MazeHelper: ObservableObject {
     static let shared = MazeHelper()
+    
     @Published var scaledTiles: Array<MazeLocation> = []
     @Published var whiteTeamCurrentLocation:MazeLocation = MazeLocation(row: 0, col: 0)
     @Published var blackTeamCurrentLocation:MazeLocation = MazeLocation(row: 0, col: 0)
@@ -39,6 +41,15 @@ class MazeHelper: ObservableObject {
             if blackTeamKeys > 3 {
                 blackTeamKeys = 3
             }
+        }
+    }
+    
+    func getKeysFor(team: TeamTurn) -> Int {
+        if team == .WHITE {
+            return whiteTeamKeys
+        }
+        else {
+            return blackTeamKeys
         }
     }
     
@@ -71,8 +82,8 @@ class MazeHelper: ObservableObject {
     
     func calculateTiles(wheelResult:Int) {
         // calculate which tiles to scale based on current position and wheel result
-        print(wheelResult, whiteTeamCurrentLocation, blackTeamCurrentLocation)
-        
+        // useful for testing specific wheel results
+        let _wheel = wheelResult
         // row based
         let teamCoords = self.teamTurn == .WHITE ? whiteTeamCurrentLocation : blackTeamCurrentLocation
         
@@ -82,7 +93,7 @@ class MazeHelper: ObservableObject {
         // we use flood fill algorithm to find all available points within a fixed range (wheel result) from the team coordinates
         for index in 0..<map.count {
             for innerIndex in 0..<map[index].count {
-                blocks.floodFill(row: index, col: innerIndex, step: wheelResult, teamPosition: teamCoords)
+                blocks.floodFill(row: index, col: innerIndex, step: _wheel, teamPosition: teamCoords)
             }
         }
         print(blocks.getVisited())
@@ -97,7 +108,7 @@ class MazeHelper: ObservableObject {
                     // so we used BFS!
                     let path = BFS().findPath(start:MazeLocation(row: teamCoords.row,col:teamCoords.col), end:MazeLocation(row:index,col:innerIndex))
                     
-                    if path.count-1 == wheelResult {
+                    if path.count-1 == _wheel {
                         self.scaledTiles.append(MazeLocation(row: index, col: innerIndex))
                     }
                 }
@@ -115,6 +126,7 @@ class MazeHelper: ObservableObject {
 
 struct GroupChallengeView:View {
     
+    @EnvironmentObject private var navigationStack: NavigationStack
     @EnvironmentObject var navigationHelper: NavigationHelper
     @Binding var activeView: PushedItem?
     @State var questionPresented:Bool = false
@@ -124,6 +136,7 @@ struct GroupChallengeView:View {
     @State var selectedCategory:String = "general"
     @State var selectedColor:Color = greenColor
     @State var locked:Bool = false
+    @State var winningTeam:TeamTurn = .WHITE
     @State var questionSuccess:Bool = MazeHelper.shared.questionSuccess {
         willSet{
             print("willSet")
@@ -194,17 +207,24 @@ struct GroupChallengeView:View {
         }
     }
     
-    
-    
-    
-    
     func onTileTapped(index:Int, innerIndex:Int) {
         print(index, innerIndex)
-        self.selectedCategory = self.getCategoryFor(point: MazeLocation(row: index, col: innerIndex))
-        self.selectedColor = self.getColorFor(point: MazeLocation(row: index, col: innerIndex))
-        self.mazeHelper.pointSelectedLast = MazeLocation(row: index, col: innerIndex)
-        // calculate type
-        self.toggleQuestion()
+        
+        // debug
+//        if (index == 7 && innerIndex == 7) {
+//            navigateToVictory()
+//            return
+//        }
+        
+        if self.mazeHelper.scaledTiles.contains(MazeLocation(row:index, col:innerIndex)) == true {
+            self.selectedCategory = self.getCategoryFor(point: MazeLocation(row: index, col: innerIndex))
+            self.selectedColor = self.getColorFor(point: MazeLocation(row: index, col: innerIndex))
+            self.mazeHelper.pointSelectedLast = MazeLocation(row: index, col: innerIndex)
+            // check if key
+            self.isKey = self.blocks.getVectorTypeBy(point: MazeLocation(row: index, col: innerIndex)) == .Key
+            // calculate type
+            self.toggleQuestion()
+        }
     }
     
     
@@ -366,6 +386,8 @@ struct GroupChallengeView:View {
     
     func onDismissQuestion() {
         if self.mazeHelper.questionSuccess == true {
+            // check keys
+            print("Keys are: ", self.mazeHelper.whiteTeamKeys, self.mazeHelper.blackTeamKeys)
             // team can re-roll
             locked = false
             // remove selected
@@ -374,6 +396,12 @@ struct GroupChallengeView:View {
             //check for win
             if self.mazeHelper.isOnVictoryTile() == true {
                 // show victory view
+                if self.mazeHelper.getKeysFor(team: self.getTeamTurnEnum()) >= 3 {
+                    print("victory")
+                    self.winningTeam = self.getTeamTurnEnum()
+                    self.locked = true
+                }
+                
             }
             // continue as normal
         }
@@ -396,6 +424,12 @@ struct GroupChallengeView:View {
         }
         else {
             return Image(localMap[index][innerIndex]["category"] as! String).resizable().frame(width: 24, height: 24, alignment: .center)
+        }
+    }
+    
+    func navigateToVictory() {
+        DispatchQueue.main.async {
+            self.navigationStack.push(GroupResultView(activeView: $activeView, teamWon: self.$winningTeam))
         }
     }
     
@@ -445,6 +479,10 @@ struct GroupChallengeView:View {
                                         ZStack(alignment: .center){
                                             RoundedRectangle(cornerRadius: 10).fill(Color.white).frame(width: 42, height: 42, alignment: .center)
                                             Image("gem").resizable().frame(width: 24, height: 24, alignment: .center)
+                                            
+                                            getWhiteTeamPosition(row:index, col: innerIndex)
+                                            
+                                            getBlackTeamPosition(row: index, col: innerIndex)
                                         }
                                         .zIndex(self.setZIndex(index:index, innerIndex:innerIndex))
                                         .scaleEffect(self.setScale(index: index, innerIndex: innerIndex), anchor: .center)
@@ -452,11 +490,17 @@ struct GroupChallengeView:View {
                                         .onTapGesture {
                                             self.onTileTapped(index: index, innerIndex: innerIndex)
                                         }
+                                        
+                                        
                                     }
                                     else if localMap[index][innerIndex]["type"] as! Int == 5 {
                                         ZStack(alignment: .center){
                                             RoundedRectangle(cornerRadius: 10).fill(greyColor).frame(width: 42, height: 42, alignment: .center)
                                             Image("key").resizable().frame(width: 24, height: 24, alignment: .center)
+                                            
+                                            getWhiteTeamPosition(row:index, col: innerIndex)
+                                            
+                                            getBlackTeamPosition(row: index, col: innerIndex)
                                         }
                                         .zIndex(self.setZIndex(index:index, innerIndex:innerIndex))
                                         .scaleEffect(self.setScale(index: index, innerIndex: innerIndex), anchor: .center)
@@ -499,6 +543,8 @@ struct GroupChallengeView:View {
                     
                 }.ignoresSafeArea().edgesIgnoringSafeArea(.all).onAppear(perform:{
                     self.mazeHelper.resetScaledTiles()
+                    self.mazeHelper.setPosition(forTeam: .WHITE, position: MazeLocation(row:0, col:0))
+                    self.mazeHelper.setPosition(forTeam: .BLACK, position: MazeLocation(row:0, col:0))
                 })
             }
         }

@@ -67,6 +67,7 @@
 		42DE27EF25BAD2ED0060FC20 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DE27EE25BAD2ED0060FC20 /* Grid.swift */; };
 		42DE27F225BAD5EE0060FC20 /* GridNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DE27F125BAD5EE0060FC20 /* GridNode.swift */; };
 		42DE27F525BADBA00060FC20 /* BFS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DE27F425BADBA00060FC20 /* BFS.swift */; };
+		42DE284325C05D300060FC20 /* GroupResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DE284225C05D300060FC20 /* GroupResultView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -124,6 +125,7 @@
 		42DE27EE25BAD2ED0060FC20 /* Grid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
 		42DE27F125BAD5EE0060FC20 /* GridNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridNode.swift; sourceTree = "<group>"; };
 		42DE27F425BADBA00060FC20 /* BFS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BFS.swift; sourceTree = "<group>"; };
+		42DE284225C05D300060FC20 /* GroupResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupResultView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,24 +195,19 @@
 				42DD8E57259C5E3C001ACFC3 /* Menu.swift */,
 				42DD8E53259B7046001ACFC3 /* QuestionView.swift */,
 				42DD8E332599E271001ACFC3 /* Router.swift */,
-				42DD8E36259B0E17001ACFC3 /* Stats.swift */,
 				42DD8E39259B0E27001ACFC3 /* Settings.swift */,
 				42DD8E3C259B0E3C001ACFC3 /* Help.swift */,
 				42CBDEC525AADEB400BAC8E8 /* Dice Wheel */,
 				42338440258E2C36001D97A9 /* Wheel */,
+				42BC22D1258E22D6007B5456 /* Preview Content */,
+				42DE284525C05D380060FC20 /* Profile */,
 				42BC22CF258E22D6007B5456 /* Assets.xcassets */,
 				42BC22D4258E22D6007B5456 /* Info.plist */,
-				42BC22D1258E22D6007B5456 /* Preview Content */,
 				4233844A258E3873001D97A9 /* Extensions.swift */,
 				423384582590BBDA001D97A9 /* GeneralKnowledge.swift */,
-				423384782590D325001D97A9 /* User.swift */,
-				42DD8E1825935460001ACFC3 /* UserProfile.swift */,
-				423384752590D2F3001D97A9 /* ProfileEditor.swift */,
-				4233847F2590D733001D97A9 /* EditorConfig.swift */,
-				4233848625910ED3001D97A9 /* Webview.swift */,
-				42DD8E14259222E0001ACFC3 /* SVGView.swift */,
 				42DD8E302599CF25001ACFC3 /* Categories.swift */,
 				42952D08259E4FAE00A0B030 /* ResultView.swift */,
+				42DE284225C05D300060FC20 /* GroupResultView.swift */,
 				42DD8E47259B3B8D001ACFC3 /* WheelMainView.swift */,
 				42952D1525A4B39E00A0B030 /* GroupChallengeView.swift */,
 				4204D14625AC90C900FDA9FB /* DiceWheelMainView.swift */,
@@ -275,6 +272,20 @@
 				42DE27F125BAD5EE0060FC20 /* GridNode.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		42DE284525C05D380060FC20 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				42DD8E36259B0E17001ACFC3 /* Stats.swift */,
+				42DD8E14259222E0001ACFC3 /* SVGView.swift */,
+				4233848625910ED3001D97A9 /* Webview.swift */,
+				4233847F2590D733001D97A9 /* EditorConfig.swift */,
+				423384752590D2F3001D97A9 /* ProfileEditor.swift */,
+				42DD8E1825935460001ACFC3 /* UserProfile.swift */,
+				423384782590D325001D97A9 /* User.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -388,6 +399,7 @@
 				42DD8E0E2592052B001ACFC3 /* AppDelegate.swift in Sources */,
 				42BC22CC258E22D5007B5456 /* TriviaMasterApp.swift in Sources */,
 				42CBDEC725AADEE100BAC8E8 /* DiceWheelConfig.swift in Sources */,
+				42DE284325C05D300060FC20 /* GroupResultView.swift in Sources */,
 				42DD8E62259C9FB8001ACFC3 /* BackArrowWithoutTimer.swift in Sources */,
 				4204D17325B0A46300FDA9FB /* QuestionSheet.swift in Sources */,
 				42DD8E15259222E0001ACFC3 /* SVGView.swift in Sources */,

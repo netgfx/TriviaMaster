@@ -38,10 +38,11 @@ struct WheelView: UIViewRepresentable {
     
     func getFortuneWheel() -> SwiftFortuneWheel {
         let slices = getSlices()
-        let frame = CGRect(x: 35, y: 100, width: 300, height: 300)
+        let frame = CGRect(x: 30, y: 0, width: 300, height: 300)
         let fortuneWheel = SwiftFortuneWheel(frame: frame, slices: slices, configuration: .WheelConfiguration)
-        DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             fortuneWheel.addTapGestureRecognizer{
+                print("tapped from inside")
                 handleTap(fortuneWheel: fortuneWheel)
             }
         }
