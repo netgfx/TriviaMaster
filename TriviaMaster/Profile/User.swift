@@ -242,6 +242,41 @@ class User: ObservableObject {
         return arr
     }
     
+    // Group Session Utils
+    
+    func saveGroupSession(wTeamPos:MazeLocation, bTeamPos:MazeLocation, currentTeamTurn:TeamTurn, wTeamKeys:Int, bTeamKeys:Int) {
+        let gsession = GroupSession(wTeamPos: wTeamPos, bTeamPos: bTeamPos, currentTeamTurn: currentTeamTurn, wTeamKeys: wTeamKeys, bTeamKeys: bTeamKeys).exportToDictionary()
+        defaults.setValue(gsession, forKey: "group_session")
+    }
+    
+    /**
+     
+     */
+    func loadGroupSession() -> GroupSession? {
+        if let data = defaults.value(forKey: "group_session") as? Dictionary<String, Any> {
+            print(data)
+            let decodedData:GroupSession = self.importSessionData(data: data)
+            return decodedData
+        }
+        else {
+            return nil
+        }
+    }
+    
+    func importSessionData(data: Dictionary<String, Any>) -> GroupSession {
+        let wTeamPos:Dictionary<String,Int> = data["whiteTeamPosition"] as! Dictionary<String, Int>
+        let bTeamPos:Dictionary<String, Int> = data["blackTeamPosition"] as! Dictionary<String, Int>
+        return GroupSession(wTeamPos: MazeLocation(row: wTeamPos["row"]!, col: wTeamPos["col"]!),
+                            bTeamPos: MazeLocation(row: bTeamPos["row"]!, col: bTeamPos["col"]!),
+                            currentTeamTurn: TeamTurn(rawValue: data["currentTeamTurn"] as! String)!,
+                            wTeamKeys: data["wTeamKeys"] as! Int,
+                            bTeamKeys: data["bTeamKeys"] as! Int)
+    }
+    
+    func getGroupSession() {
+        
+    }
+    
     // Prevent non singleton access.
     private init(){
         getData()

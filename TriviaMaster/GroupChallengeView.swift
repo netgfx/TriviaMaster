@@ -26,8 +26,16 @@ class MazeHelper: ObservableObject {
     @Published var questionSuccess:Bool = false
     @Published var whiteTeamKeys:Int = 0
     @Published var blackTeamKeys:Int = 0
+    @Published var groupSession: GroupSession!
     
     var blocks = GroupChallenge()
+    
+    func loadStoredGame() {
+        self.groupSession = User.shared.loadGroupSession()
+        if self.groupSession == nil {
+            print("no games are saved")
+        }
+    }
     
     func setTeamKeysFor(team:TeamTurn) {
         if team == .WHITE {
@@ -364,9 +372,8 @@ struct GroupChallengeView:View {
         return Group{
             if self.mazeHelper.whiteTeamCurrentLocation.row == row && self.mazeHelper.whiteTeamCurrentLocation.col == col {
                 
-                Image("arrow-down-white").resizable().frame(width:20, height:20, alignment: .center).offset(y: -12).padding(.top, -12)
+                AnimatedArrow(type: .WHITE)
             }
-            
             else {
                 Group{ EmptyView() }
             }
@@ -376,7 +383,7 @@ struct GroupChallengeView:View {
     func getBlackTeamPosition(row:Int, col: Int) -> some View {
         return Group{
             if self.mazeHelper.blackTeamCurrentLocation.row == row && self.mazeHelper.blackTeamCurrentLocation.col == col {
-                Image("arrow-down-black").resizable().frame(width:20, height:20, alignment: .center).offset(y: -12).padding(.top, -12).rotationEffect(.degrees(-90))
+                AnimatedArrow(type: .BLACK)
             }
             else {
                 EmptyView()
@@ -437,8 +444,13 @@ struct GroupChallengeView:View {
         ZStack{
             SwiftUI.Color.init(red: 133/255, green: 87/255, blue: 160/255, opacity: 1).edgesIgnoringSafeArea(.all)
             VStack {
-                BackArrowWithoutTimer()
-                
+                HStack{
+                    BackArrowWithoutTimer()
+                    Spacer()
+                    Image("save").resizable().frame(width: 38, height: 38).onTapGesture {
+                        User.shared.saveGroupSession(wTeamPos:self.mazeHelper.whiteTeamCurrentLocation, bTeamPos:self.mazeHelper.blackTeamCurrentLocation, currentTeamTurn:self.getTeamTurnEnum(), wTeamKeys:self.mazeHelper.whiteTeamKeys, bTeamKeys: self.mazeHelper.blackTeamKeys)
+                    }
+                }.padding(.trailing, 20)
                 ScrollView{
                     VStack(spacing: 0){
                         
@@ -543,6 +555,7 @@ struct GroupChallengeView:View {
                     
                 }.ignoresSafeArea().edgesIgnoringSafeArea(.all).onAppear(perform:{
                     self.mazeHelper.resetScaledTiles()
+                    self.mazeHelper.loadStoredGame()
                     self.mazeHelper.setPosition(forTeam: .WHITE, position: MazeLocation(row:0, col:0))
                     self.mazeHelper.setPosition(forTeam: .BLACK, position: MazeLocation(row:0, col:0))
                 })
