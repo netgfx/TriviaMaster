@@ -269,8 +269,8 @@ class User: ObservableObject {
         return GroupSession(wTeamPos: MazeLocation(row: wTeamPos["row"]!, col: wTeamPos["col"]!),
                             bTeamPos: MazeLocation(row: bTeamPos["row"]!, col: bTeamPos["col"]!),
                             currentTeamTurn: TeamTurn(rawValue: data["currentTeamTurn"] as! String)!,
-                            wTeamKeys: data["wTeamKeys"] as! Int,
-                            bTeamKeys: data["bTeamKeys"] as! Int)
+                            wTeamKeys: data["whiteTeamKeys"] as! Int,
+                            bTeamKeys: data["blackTeamKeys"] as! Int)
     }
     
     func getGroupSession() {
