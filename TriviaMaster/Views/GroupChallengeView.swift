@@ -447,7 +447,7 @@ struct GroupChallengeView:View {
                 HStack{
                     BackArrowWithoutTimer()
                     Spacer()
-                    Image("save").resizable().frame(width: 38, height: 38).onTapGesture {
+                    Image("save").resizable().frame(width: 36, height: 36).onTapGesture {
                         User.shared.saveGroupSession(wTeamPos:self.mazeHelper.whiteTeamCurrentLocation, bTeamPos:self.mazeHelper.blackTeamCurrentLocation, currentTeamTurn:self.getTeamTurnEnum(), wTeamKeys:self.mazeHelper.whiteTeamKeys, bTeamKeys: self.mazeHelper.blackTeamKeys)
                     }
                 }.padding(.trailing, 20)

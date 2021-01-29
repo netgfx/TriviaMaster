@@ -169,6 +169,24 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		4291C3EE25C45BD0009985A8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				42DD8E5A259C5E81001ACFC3 /* Login.swift */,
+				42DD8E57259C5E3C001ACFC3 /* Menu.swift */,
+				42DD8E53259B7046001ACFC3 /* QuestionView.swift */,
+				42DD8E39259B0E27001ACFC3 /* Settings.swift */,
+				42DD8E3C259B0E3C001ACFC3 /* Help.swift */,
+				42DD8E302599CF25001ACFC3 /* Categories.swift */,
+				42952D08259E4FAE00A0B030 /* ResultView.swift */,
+				42DE284225C05D300060FC20 /* GroupResultView.swift */,
+				42DD8E47259B3B8D001ACFC3 /* WheelMainView.swift */,
+				4204D14625AC90C900FDA9FB /* DiceWheelMainView.swift */,
+				42952D1525A4B39E00A0B030 /* GroupChallengeView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		42BC22BF258E22D5007B5456 = {
 			isa = PBXGroup;
 			children = (
@@ -189,18 +207,14 @@
 		42BC22CA258E22D5007B5456 /* TriviaMaster */ = {
 			isa = PBXGroup;
 			children = (
+				4291C3EE25C45BD0009985A8 /* Views */,
 				42DD8E2A2599C143001ACFC3 /* Utils */,
 				42DD8E262599C01B001ACFC3 /* Models */,
 				42DD8E1725935005001ACFC3 /* Components */,
 				42BC22CB258E22D5007B5456 /* TriviaMasterApp.swift */,
 				42DD8E0D2592052B001ACFC3 /* AppDelegate.swift */,
 				42BC22CD258E22D5007B5456 /* ContentView.swift */,
-				42DD8E5A259C5E81001ACFC3 /* Login.swift */,
-				42DD8E57259C5E3C001ACFC3 /* Menu.swift */,
-				42DD8E53259B7046001ACFC3 /* QuestionView.swift */,
 				42DD8E332599E271001ACFC3 /* Router.swift */,
-				42DD8E39259B0E27001ACFC3 /* Settings.swift */,
-				42DD8E3C259B0E3C001ACFC3 /* Help.swift */,
 				42CBDEC525AADEB400BAC8E8 /* Dice Wheel */,
 				42338440258E2C36001D97A9 /* Wheel */,
 				42BC22D1258E22D6007B5456 /* Preview Content */,
@@ -209,12 +223,6 @@
 				42BC22D4258E22D6007B5456 /* Info.plist */,
 				4233844A258E3873001D97A9 /* Extensions.swift */,
 				423384582590BBDA001D97A9 /* GeneralKnowledge.swift */,
-				42DD8E302599CF25001ACFC3 /* Categories.swift */,
-				42952D08259E4FAE00A0B030 /* ResultView.swift */,
-				42DE284225C05D300060FC20 /* GroupResultView.swift */,
-				42DD8E47259B3B8D001ACFC3 /* WheelMainView.swift */,
-				42952D1525A4B39E00A0B030 /* GroupChallengeView.swift */,
-				4204D14625AC90C900FDA9FB /* DiceWheelMainView.swift */,
 			);
 			path = TriviaMaster;
 			sourceTree = "<group>";
