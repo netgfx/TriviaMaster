@@ -530,24 +530,27 @@ struct GroupChallengeView:View {
                             }.zIndex(setZRowIndex(index:index))
                         }
                         
-                        VStack(spacing:20) {
+                        VStack(spacing:5) {
+                            HStack {
+                                
+                                HStack(spacing:10){
+                                    Image("uikey").resizable().frame(width: 48, height: 48)
+                                    //CustomText(text: "W", size: 51, color: .white)
+                                    CustomText(text: String(self.mazeHelper.whiteTeamKeys)+"/3", size: 24, color:.white)
+                                }.padding(.leading, 15)
+                                Spacer()
+                                HStack(spacing:10){
+                                    Image("uikey").resizable().frame(width: 48, height: 48)
+                                    //CustomText(text: "B", size: 51, color: .black)
+                                    CustomText(text: String(self.mazeHelper.blackTeamKeys)+"/3", size: 24, color:.black)
+                                }.padding(.trailing, 15)
+                                
+                            }
                             // other controls //
                             DiceWheelMainView(locked: $locked).disabled(locked)
                             
-                            HStack {
-                                Spacer()
-                                HStack(spacing:10){
-                                    CustomText(text: "W", size: 51, color: .white)
-                                    CustomText(text: String(self.mazeHelper.whiteTeamKeys)+"/3", size: 24, color:.white)
-                                }
-                                Spacer()
-                                HStack(spacing:10){
-                                    CustomText(text: "B", size: 51, color: .black)
-                                    CustomText(text: String(self.mazeHelper.blackTeamKeys)+"/3", size: 24, color:.black)
-                                }
-                                Spacer()
-                            }
-                        }.padding(.top, 20).sheet(isPresented: $questionPresented, onDismiss: onDismissQuestion) {
+                            
+                        }.padding(.top, 10).sheet(isPresented: $questionPresented, onDismiss: onDismissQuestion) {
                             
                             QuestionSheet(questionPresented: $questionPresented, isKey: $isKey, currentTeam: self.$mazeHelper.teamTurn, categoryName: $selectedCategory, categoryColor: $selectedColor)
                         }

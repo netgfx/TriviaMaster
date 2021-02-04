@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import NavigationStack
 
 struct LoginView: View{
     
@@ -37,6 +38,7 @@ struct RegisterButton: View {
     @EnvironmentObject var navigationHelper: NavigationHelper
     @Binding var username: String
     @Binding var activeView: PushedItem?
+    @EnvironmentObject private var navigationStack: NavigationStack
     var body: some View {
         VStack{
             
@@ -47,7 +49,8 @@ struct RegisterButton: View {
                     // save it!
                     User.shared.setName(name: self.username)
                     DispatchQueue.main.async {
-                        activeView = .MENU
+                        self.activeView = PushedItem.MENU
+                        //self.navigationStack.push(MenuView(activeView: $activeView))
                     }
                     
                     //navigationHelper.selection = PushedItem.MENU.rawValue

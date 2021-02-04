@@ -66,7 +66,6 @@ struct ContentView: View {
                         else {
                             MenuView(activeView: $selectedPushedItem)
                         }
-                        // so weird, this will not work on this view it needs one child down
                         
                         Spacer()
                         

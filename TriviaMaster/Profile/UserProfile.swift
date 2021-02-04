@@ -53,7 +53,9 @@ struct UserProfile:View {
                         }
                         
                         Text(User.shared.getName()).font(.custom("KGBlankSpaceSolid", size: 18)).foregroundColor(.white)
-                    }
+                    }.onAppear(perform: {
+                        self.profileURL = User.shared.profileImageURL
+                    })
                     
                     // CATEGORIES //
                     VStack(spacing:20){

@@ -7,17 +7,20 @@
 
 import Foundation
 import SwiftUI
+import NavigationStack
 
 struct BottomBar:View {
     @Binding var activeView:PushedItem?
     @EnvironmentObject var navigationHelper: NavigationHelper
+    @EnvironmentObject private var navigationStack: NavigationStack
     var body: some View {
         
             HStack{
                 VStack(spacing:20){
                         Image("usericon").resizable().frame(width: 38, height: 38, alignment: .center).onTapGesture(count: 1) {
                             
-                            self.activeView = PushedItem.PROFILE
+                            //self.activeView = PushedItem.PROFILE
+                            self.navigationStack.push(UserProfile(activeView: $activeView))
                             print("clicked ", self.activeView)
                         }
                     Text(User.shared.getName()).font(.custom("KGBlankSpaceSolid", size: 16)).foregroundColor(.white)
@@ -27,7 +30,7 @@ struct BottomBar:View {
                     
                         Image("barchart").resizable().frame(width: 38, height: 38, alignment: .center).onTapGesture(count: 1) {
                             print("clicked")
-                            self.activeView = PushedItem.STATS
+                            self.navigationStack.push(Stats(activeView: $activeView))
                         }
                    
                     Text("Stats").font(.custom("KGBlankSpaceSolid", size: 16)).foregroundColor(.white)
@@ -37,7 +40,8 @@ struct BottomBar:View {
                    
                         Image("help2").resizable().frame(width: 38, height: 38, alignment: .center).onTapGesture(count: 1) {
                             print("clicked")
-                            self.activeView = PushedItem.HELP
+                            //self.activeView = PushedItem.HELP
+                            self.navigationStack.push(Help(activeView: $activeView))
                         }
                     
                     Text("Help").font(.custom("KGBlankSpaceSolid", size: 16)).foregroundColor(.white)
@@ -47,7 +51,8 @@ struct BottomBar:View {
                     
                         Image("settings").resizable().frame(width: 38, height: 38, alignment: .center).onTapGesture(count: 1) {
                             print("clicked")
-                            self.activeView = PushedItem.SETTINGS
+                            //self.activeView = PushedItem.SETTINGS
+                            self.navigationStack.push(Settings(activeView: $activeView))
                         }
                     
                     Text("Settings").font(.custom("KGBlankSpaceSolid", size: 16)).foregroundColor(.white)
