@@ -59,8 +59,6 @@ struct WheelMainView: View {
                                 if self.setSize(geometry: geometry.size){}
                             }
                                 
-                                
-                                
                                 ZStack{
                                     HStack(alignment: .center){
                                             Spacer()
