@@ -56,6 +56,7 @@ class Utils: ObservableObject {
     }
     
     func stopTimer() {
+        self.ended = false
         self.timer.pause()
         //self.elapsedTime = 30
     }

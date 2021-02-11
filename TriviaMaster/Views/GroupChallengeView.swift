@@ -440,6 +440,8 @@ struct GroupChallengeView:View {
         }
     }
     
+    
+    
     var body: some View {
         ZStack{
             SwiftUI.Color.init(red: 133/255, green: 87/255, blue: 160/255, opacity: 1).edgesIgnoringSafeArea(.all)
